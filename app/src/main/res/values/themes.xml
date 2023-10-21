@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.JournalApp" parent="Base.Theme.JournalApp" />
+
+    <style name="CustomTabStyle" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">8sp</item>
+    </style>
+
 </resources>
