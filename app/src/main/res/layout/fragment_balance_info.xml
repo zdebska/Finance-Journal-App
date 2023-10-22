@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.BalanceInfoFragment"
+    android:background="@color/transparent">
+
+
+    <RelativeLayout
+        android:layout_width="342sp"
+        android:layout_height="180sp"
+        android:layout_gravity="center"
+        android:background="@color/white">
+
+
+        <!-- "Balance" text -->
+        <TextView
+            android:id="@+id/balanceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Change balance"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+
+        <!-- "Change balance" text -->
+        <TextView
+            android:id="@+id/changeBalanceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/balance_text"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/balanceTextView"
+            android:layout_marginTop="10dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/SaveButton"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+
+            android:layout_centerHorizontal="true"
+
+            android:layout_marginTop="120sp"
+
+            android:background="@drawable/save_background"
+
+            android:textColor="@color/black"
+            android:textSize="33sp">
+
+        </androidx.appcompat.widget.AppCompatButton>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/closeButton"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/baseline_close_24"
+
+            android:textColor="@color/black"
+            android:textSize="33sp">
+
+        </androidx.appcompat.widget.AppCompatButton>
+
+
+    </RelativeLayout>
+
+    <!-- Button -->
+
+
+</FrameLayout>

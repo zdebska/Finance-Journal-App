@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:id="@+id/main_container">
 
 
     <androidx.viewpager.widget.ViewPager
@@ -12,7 +13,7 @@
         android:layout_width="match_parent"
 
         android:layout_height="match_parent"
-        android:layout_above="@id/appBarLayout" >
+        android:layout_above="@id/appBarLayout">
 
 
     </androidx.viewpager.widget.ViewPager>
@@ -27,15 +28,14 @@
             android:id="@+id/addButton"
             android:layout_width="65dp"
             android:layout_height="65dp"
-            android:background="@drawable/round_button"
-            android:text="@string/plus_char"
-            android:textColor="@color/black"
             android:layout_gravity="end"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
+            android:background="@drawable/round_button"
+            android:text="@string/plus_char"
+            android:textColor="@color/black"
 
-            android:textSize="33sp">
-        </androidx.appcompat.widget.AppCompatButton>
+            android:textSize="33sp"></androidx.appcompat.widget.AppCompatButton>
 
 
         <com.google.android.material.tabs.TabLayout
