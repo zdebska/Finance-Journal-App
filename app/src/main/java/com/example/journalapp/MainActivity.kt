@@ -25,8 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpTabs() {
 
-
-
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(HomeFragment(),"Home")
         adapter.addFragment(TransactionsFragment(), "Transactions")
@@ -40,6 +38,10 @@ class MainActivity : AppCompatActivity() {
         tabs.getTabAt(1)!!.setIcon(R.drawable.baseline_currency_exchange_24)
         tabs.getTabAt(2)!!.setIcon(R.drawable.baseline_bar_chart_24)
 
+    }
+
+    fun changeTab(index: Int) {
+        tabs.getTabAt(index)?.select()
     }
 
 }

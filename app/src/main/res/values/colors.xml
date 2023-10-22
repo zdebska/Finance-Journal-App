@@ -5,4 +5,6 @@
     <color name="colorPrimary">#D9D9D9</color>
     <color name="colorSecond">#670000</color>
     <color name="colorThird">#1E2B75</color>
+    <color name="blue">#4F48A7</color>
+    <color name="transparent">#6F6D6D</color>
 </resources>
