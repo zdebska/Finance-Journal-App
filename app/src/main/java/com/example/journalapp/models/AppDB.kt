@@ -19,6 +19,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         const val KEY_AMOUNT = "amount"
         const val KEY_NOTE = "note"
         const val KEY_DATE = "creation_date"
+        const val KEY_TRANS_TYPE = "trans_type"
 
         const val KEY_CAT = "category"
         const val KEY_NAME = "name"
@@ -33,6 +34,8 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
                 "$KEY_NOTE TEXT," +
                 "$KEY_DATE NUMERIC DEFAULT CURRENT_TIMESTAMP," +
                 "$KEY_CAT INTEGER," +
+                "$KEY_TRANS_TYPE TEXT," +
+                "CHECK ($KEY_TRANS_TYPE IN ('Expence','Income'))," +
                 "FOREIGN KEY ($KEY_CAT) REFERENCES $TABLE_CATEGORIES($KEY_ID)" +
                 ")"
 
@@ -94,7 +97,13 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     @SuppressLint("Range")
     fun viewTransactions(condition: String): ArrayList<TransactionModel> {
         val transList: ArrayList<TransactionModel> = ArrayList()
-        val selectQuery = "SELECT * FROM $TABLE_TRANSACTIONS WHERE $condition"
+        val selectQuery: String
+
+        if (condition.isNotEmpty()) {
+            selectQuery = "SELECT * FROM $TABLE_TRANSACTIONS WHERE $condition"
+        } else {
+            selectQuery = "SELECT * FROM $TABLE_TRANSACTIONS"
+        }
 
         val db = this.readableDatabase
         var cursor: Cursor? = null
@@ -110,6 +119,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         var note: String
         var creationDate: String
         var category: Int
+        var transType: String
 
         if (cursor.moveToFirst()) {
             do {
@@ -118,13 +128,15 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 creationDate = cursor.getString(cursor.getColumnIndex(KEY_DATE))
                 category = cursor.getInt(cursor.getColumnIndex(KEY_CAT))
+                transType = cursor.getString(cursor.getColumnIndex(KEY_TRANS_TYPE))
 
                 val transaction = TransactionModel(
                     id = id,
                     amount = amount,
                     note = note,
                     creationDate = creationDate,
-                    category = category
+                    category = category,
+                    transType = transType
                 )
                 transList.add(transaction)
             } while (cursor.moveToNext())

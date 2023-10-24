@@ -6,5 +6,6 @@ class TransactionModel(
     val amount: Int,
     val note: String,
     val creationDate: String,
-    val category: Int
+    val category: Int,
+    val transType: String
 )
