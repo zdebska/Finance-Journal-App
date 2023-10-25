@@ -9,4 +9,9 @@
     <string name="see_all">See all</string>
     <string name="expence">Expence</string>
     <string name="income">Income</string>
+    <string name="addTransaction">Add transaction</string>
+    <string name="date">Date</string>
+    <string name="amount">Amount</string>
+    <string name="category">Category</string>
+    <string name="note">Note</string>
 </resources>

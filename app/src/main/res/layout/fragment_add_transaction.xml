@@ -1,19 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".fragments.HomeFragment"
+    android:id="@+id/addTransactionFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/titleAddTransaction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Add transaction"
-            android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginTop="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16sp"
+            android:background="@color/white"
+            android:drawablePadding="12sp"
+            android:text="@string/addTransaction"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
 
+        <ImageView
+            android:id="@+id/arrowBackBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/titleAddTransaction"
+            android:layout_alignParentStart="false"
+            android:layout_centerHorizontal="false"
+            android:layout_marginEnd="57dp"
+            android:layout_marginBottom="0dp"
+            android:layout_toStartOf="@id/titleAddTransaction"
+            app:srcCompat="@drawable/baseline_arrow_back_24" />
+
+        <LinearLayout
+            android:id="@+id/TransactionTypeLayout"
+            android:layout_width="304dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/titleAddTransaction"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ellipse_choose_income_outcome"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/selectExpTransactions"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/white"
+                android:gravity="center_horizontal"
+                android:text="@string/expence"
+                android:textColor="@color/black"
+                android:textSize="13sp"/>
+
+            <Button
+                android:id="@+id/selectIncTransactions"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="3dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/main_grey_color"
+                android:gravity="center_horizontal"
+                android:text="@string/income"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dateID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TransactionTypeLayout"
+            android:layout_alignStart="@id/TransactionTypeLayout"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="37dp"
+            android:text="@string/date"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@+id/DateSelectionLayout"
+            android:layout_width="304dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/dateID"
+            android:layout_alignStart="@id/dateID"
+            android:background="@color/blue"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/amountID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/DateSelectionLayout"
+            android:layout_alignStart="@id/TransactionTypeLayout"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/amount"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@+id/AmountSelectionLayout"
+            android:layout_width="304dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/amountID"
+            android:layout_alignStart="@id/amountID"
+            android:background="@color/blue"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/categoryID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/AmountSelectionLayout"
+            android:layout_alignStart="@id/AmountSelectionLayout"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/category"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@+id/CategorySelectionLayout"
+            android:layout_width="304dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/categoryID"
+            android:layout_alignStart="@id/categoryID"
+            android:background="@color/blue"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/noteID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/CategorySelectionLayout"
+            android:layout_alignStart="@id/CategorySelectionLayout"
+            android:layout_marginStart="0dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/note"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@+id/NoteLayout"
+            android:layout_width="304dp"
+            android:layout_height="35dp"
+            android:layout_below="@+id/noteID"
+            android:layout_alignStart="@id/noteID"
+            android:background="@color/blue"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="61dp"
+            android:layout_height="62dp"
+            android:background="@drawable/circle_save_transaction_btn"
+            android:orientation="horizontal"
+            android:layout_below="@id/NoteLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="140dp"
+            >
+        <Button
+            android:id="@+id/saveTransactionBtn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF"
+             />
+        </LinearLayout>
     </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</FrameLayout>
