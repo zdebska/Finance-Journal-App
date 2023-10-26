@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.HomeFragment"
+    tools:context=".fragments.AddTransactionFragment"
     android:id="@+id/addTransactionFragment"
     android:background="@color/white">
 
@@ -41,7 +41,7 @@
         <LinearLayout
             android:id="@+id/TransactionTypeLayout"
             android:layout_width="304dp"
-            android:layout_height="35dp"
+            android:layout_height="37dp"
             android:layout_below="@+id/titleAddTransaction"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="16dp"
@@ -56,7 +56,7 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/white"
                 android:gravity="center_horizontal"
-                android:text="@string/expence"
+                android:text="@string/expense"
                 android:textColor="@color/black"
                 android:textSize="13sp"/>
 
@@ -88,7 +88,7 @@
         <LinearLayout
             android:id="@+id/DateSelectionLayout"
             android:layout_width="304dp"
-            android:layout_height="35dp"
+            android:layout_height="37dp"
             android:layout_below="@+id/dateID"
             android:layout_alignStart="@id/dateID"
             android:orientation="horizontal">
@@ -102,14 +102,18 @@
                 />
 
             <Button
+                android:id="@+id/SelectDateBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:layout_weight="2"
-                android:backgroundTint="@color/black"/>
+                android:backgroundTint="@color/white"
+                android:gravity="left"
+                android:textColor="@color/black"
+                android:textSize="15sp"/>
 
             <ImageView
-                android:id="@+id/SelectDateBtn"
+                android:id="@+id/SelectDateImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -134,7 +138,7 @@
         <LinearLayout
             android:id="@+id/AmountSelectionLayout"
             android:layout_width="304dp"
-            android:layout_height="35dp"
+            android:layout_height="37dp"
             android:layout_below="@+id/amountID"
             android:layout_alignStart="@id/amountID"
             android:orientation="horizontal">
@@ -146,14 +150,23 @@
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/add_trans_amount_icon" />
 
-            <Button
+            <EditText
+                android:id="@+id/SelectAmountBtn"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="2"
-                android:layout_marginStart="3dp"/>
+                android:layout_marginStart="3dp"
+                android:backgroundTint="@color/white"
+                android:hint="@string/amount_zero"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                tools:ignore="RtlHardcoded" />
 
             <ImageView
-                android:id="@+id/SelectAmountBtn"
+                android:id="@+id/SelectAmountImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -175,7 +188,7 @@
         <LinearLayout
             android:id="@+id/CategorySelectionLayout"
             android:layout_width="304dp"
-            android:layout_height="35dp"
+            android:layout_height="37dp"
             android:layout_below="@+id/categoryID"
             android:layout_alignStart="@id/categoryID"
             android:orientation="horizontal">
@@ -188,13 +201,19 @@
                 app:srcCompat="@drawable/add_trans_cat_icon" />
 
             <Button
+                android:id="@+id/SelectCategoryBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
                 android:layout_weight="2"
-                />
+                android:backgroundTint="@color/white"
+                android:text="@string/cat_none"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:gravity="left"
+                tools:ignore="RtlHardcoded" />
+
             <ImageView
-                android:id="@+id/SelectCategoryBtn"
+                android:id="@+id/SelectCategoryImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -217,7 +236,7 @@
         <LinearLayout
             android:id="@+id/NoteLayout"
             android:layout_width="304dp"
-            android:layout_height="35dp"
+            android:layout_height="37dp"
             android:layout_below="@+id/noteID"
             android:layout_alignStart="@id/noteID"
             android:orientation="horizontal">
@@ -229,14 +248,23 @@
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/add_trans_note_icon" />
 
-            <Button
+            <EditText
+                android:id="@+id/SelectNoteBtn"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginStart="3dp"
-                android:layout_weight="2"/>
+                android:layout_weight="2"
+                android:backgroundTint="@color/white"
+                android:hint="@string/note_background"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:maxLength="30"
+                android:textSize="15sp"
+                android:gravity="center_vertical"
+                android:clickable="true"/>
 
             <ImageView
-                android:id="@+id/SelectNoteBtn"
+                android:id="@+id/SelectNoteImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -251,7 +279,7 @@
             android:orientation="horizontal"
             android:layout_below="@id/NoteLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="130dp"
             >
         <Button
             android:id="@+id/saveTransactionBtn"

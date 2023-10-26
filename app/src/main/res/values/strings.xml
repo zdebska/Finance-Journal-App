@@ -7,11 +7,14 @@
     <string name="this_month">This month</string>
     <string name="last_transactions">Last transactions</string>
     <string name="see_all">See all</string>
-    <string name="expence">Expence</string>
+    <string name="expense">Expense</string>
     <string name="income">Income</string>
     <string name="addTransaction">Add transaction</string>
     <string name="date">Date</string>
     <string name="amount">Amount</string>
     <string name="category">Category</string>
     <string name="note">Note</string>
+    <string name="amount_zero">0.00</string>
+    <string name="cat_none">None</string>
+    <string name="note_background">Write a note</string>
 </resources>

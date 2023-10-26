@@ -8,15 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.journalapp.MainActivity
 import com.example.journalapp.R
+import com.example.journalapp.fragments.adapters.RecordAdapter
+import com.example.journalapp.models.AppDB
+
 
 class HomeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,7 +34,7 @@ class HomeFragment : Fragment() {
         val textSeeAll = view.findViewById<TextView>(R.id.textSeeAll)
 
         val textIncome = view.findViewById<TextView>(R.id.textIncome)
-        val textExpence = view.findViewById<TextView>(R.id.textExpence)
+        val textExpense = view.findViewById<TextView>(R.id.textExpence)
         val textBalance = view.findViewById<TextView>(R.id.textBalance)
         val addButton = mainActivity.findViewById<Button>(R.id.addButton)
 
@@ -42,11 +47,11 @@ class HomeFragment : Fragment() {
             mainActivity.changeTab(2)
         }
 
-        textExpence.setOnClickListener {
+        textExpense.setOnClickListener {
             mainActivity.changeTab(2)
         }
 
-        addButton.setOnClickListener(){
+        addButton.setOnClickListener() {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             val addTransactionFragment = AddTransactionFragment()
@@ -66,7 +71,17 @@ class HomeFragment : Fragment() {
             fragmentTransaction.commit()
         }
 
+        showLastTransactions(view)
         return view
     }
 
+    private fun showLastTransactions(view: View) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+        val layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
+        val dbHandler: AppDB = AppDB(requireContext())
+        val records = dbHandler.viewTransactions("ORDER BY ${AppDB.KEY_ID} DESC LIMIT 4")
+        val adapter = RecordAdapter(records)
+        recyclerView.adapter = adapter
+    }
 }

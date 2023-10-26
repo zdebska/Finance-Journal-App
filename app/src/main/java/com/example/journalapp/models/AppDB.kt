@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
 class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+
     companion object {
         const val DATABASE_NAME = "FinanceJournalDatabase.db"
         const val DATABASE_VERSION = 1
@@ -20,7 +21,6 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         const val KEY_NOTE = "note"
         const val KEY_DATE = "creation_date"
         const val KEY_TRANS_TYPE = "trans_type"
-
         const val KEY_CAT = "category"
         const val KEY_NAME = "name"
         const val KEY_ICON = "icon_path"
@@ -30,20 +30,20 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     override fun onCreate(db: SQLiteDatabase?) {
         val createTransactionsTable = "CREATE TABLE IF NOT EXISTS $TABLE_TRANSACTIONS" +
                 "($KEY_ID INTEGER PRIMARY KEY," +
-                "$KEY_AMOUNT INTEGER," +
-                "$KEY_NOTE TEXT," +
+                "$KEY_AMOUNT REAL NOT NULL," +
+                "$KEY_NOTE TEXT NOT NULL," +
                 "$KEY_DATE NUMERIC DEFAULT CURRENT_TIMESTAMP," +
                 "$KEY_CAT INTEGER," +
                 "$KEY_TRANS_TYPE TEXT," +
-                "CHECK ($KEY_TRANS_TYPE IN ('Expence','Income'))," +
+                "CHECK ($KEY_TRANS_TYPE IN ('Expense','Income'))," +
                 "FOREIGN KEY ($KEY_CAT) REFERENCES $TABLE_CATEGORIES($KEY_ID)" +
                 ")"
 
 
         val createCategoryTable = "CREATE TABLE IF NOT EXISTS $TABLE_CATEGORIES" +
                 "( $KEY_ID INTEGER PRIMARY KEY," +
-                "$KEY_NAME TEXT," +
-                "$KEY_ICON TEXT" +
+                "$KEY_NAME TEXT NOT NULL," +
+                "$KEY_ICON TEXT NOT NULL" +
                 ")"
 
         db?.execSQL(createTransactionsTable)
@@ -67,6 +67,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         contentValues.put(KEY_NOTE, transaction.note)
         contentValues.put(KEY_DATE, transaction.creationDate)
         contentValues.put(KEY_CAT, transaction.category)
+        contentValues.put(KEY_TRANS_TYPE, transaction.transType)
 
         // insert obtained data to the table "transactions"
         val success = db.insert(TABLE_TRANSACTIONS, null, contentValues)
@@ -100,7 +101,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         val selectQuery: String
 
         if (condition.isNotEmpty()) {
-            selectQuery = "SELECT * FROM $TABLE_TRANSACTIONS WHERE $condition"
+            selectQuery = "SELECT * FROM $TABLE_TRANSACTIONS $condition"
         } else {
             selectQuery = "SELECT * FROM $TABLE_TRANSACTIONS"
         }
@@ -112,10 +113,11 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
             cursor = db.rawQuery(selectQuery, null)
         } catch (e: SQLException) {
             db.execSQL(selectQuery)
+            db.close()
             return ArrayList()
         }
         var id: Int
-        var amount: Int
+        var amount: Float
         var note: String
         var creationDate: String
         var category: Int
@@ -124,7 +126,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         if (cursor.moveToFirst()) {
             do {
                 id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
-                amount = cursor.getInt(cursor.getColumnIndex(KEY_AMOUNT))
+                amount = cursor.getFloat(cursor.getColumnIndex(KEY_AMOUNT))
                 note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
                 creationDate = cursor.getString(cursor.getColumnIndex(KEY_DATE))
                 category = cursor.getInt(cursor.getColumnIndex(KEY_CAT))
@@ -142,6 +144,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
             } while (cursor.moveToNext())
             cursor.close()
         }
+        db.close()
         return transList
     }
 
@@ -158,6 +161,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
             cursor = db.rawQuery(selectQuery, null)
         } catch (e: SQLException) {
             db.execSQL(selectQuery)
+            db.close()
             return ArrayList()
         }
 
@@ -175,6 +179,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
             } while (cursor.moveToNext())
             cursor.close()
         }
+        db.close()
         return catList
     }
 
@@ -187,6 +192,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         contentValues.put(KEY_NOTE, transaction.note)
         contentValues.put(KEY_DATE, transaction.creationDate)
         contentValues.put(KEY_CAT, transaction.category)
+        contentValues.put(KEY_TRANS_TYPE, transaction.transType)
 
         val success = db.update(
             TABLE_TRANSACTIONS, contentValues,
@@ -205,5 +211,28 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
 
         db.close()
         return success
+    }
+
+
+    @SuppressLint("Range")
+    fun getCategoryId(catName: String): Int {
+        val selectQuery = "SELECT * FROM $TABLE_CATEGORIES WHERE name = '$catName'"
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        } catch (e: SQLException) {
+            db.execSQL(selectQuery)
+            return 0
+        }
+
+        if (cursor.moveToFirst()) {
+            return cursor.getInt(cursor.getColumnIndex(KEY_NAME))
+        }
+        cursor.close()
+        db.close()
+
+        return 0
     }
 }
