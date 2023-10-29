@@ -6,17 +6,120 @@
     tools:context=".fragments.AnalysisFragment"
     android:id="@+id/analysis_containter_fragment">
 
+
+
+
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
         <TextView
+            android:id="@+id/titleAnlysis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Analysis"
-            android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginTop="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16sp"
+            android:background="@color/white"
+            android:drawablePadding="12sp"
+            android:text="@string/analysis"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <LinearLayout
+            android:id="@+id/TransactionTypeLayout"
+            android:layout_width="304dp"
+            android:layout_height="37dp"
+            android:layout_below="@+id/titleAnlysis"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ellipse_choose_income_outcome"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/selectExpTransactions"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/white"
+                android:gravity="center_horizontal"
+                android:text="@string/expense"
+                android:textColor="@color/black"
+                android:textSize="13sp"/>
+
+            <Button
+                android:id="@+id/selectIncTransactions"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="3dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/main_grey_color"
+                android:gravity="center_horizontal"
+                android:text="@string/income"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </LinearLayout>
+        <TextView
+            android:id="@+id/textIntotal"
+            android:layout_width="wrap_content"
+            android:layout_height="48sp"
+            android:layout_alignParentRight="true"
+
+            android:layout_marginTop="155sp"
+            android:layout_marginRight="33dp"
+            android:background="@drawable/rectangle_round"
+
+            android:gravity="center"
+
+            android:ems="8"
+            android:padding="1sp"
+            android:text="@string/inTotal"
+            android:textColor="@color/black"
+
+            android:textSize="17sp"
+            />
+
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="170dp"
+            android:layout_marginStart="33sp"
+            android:layout_marginTop="164sp"
+            android:gravity="left"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/CategoryAnalysisContainer"
+            android:layout_width="380dp"
+            android:layout_height="332dp"
+            android:layout_marginTop="470dp"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical" />
+        </LinearLayout>
+
 
     </RelativeLayout>
 
