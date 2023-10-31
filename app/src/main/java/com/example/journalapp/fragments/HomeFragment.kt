@@ -1,3 +1,8 @@
+/*
+* @author Assatulla Dias (xassat00)
+* @brief Home Fragment implementation
+* */
+
 package com.example.journalapp.fragments
 
 import android.content.Intent
@@ -8,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.journalapp.MainActivity
@@ -30,9 +34,7 @@ class HomeFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         val mainActivity = requireActivity() as MainActivity
-
         val textSeeAll = view.findViewById<TextView>(R.id.textSeeAll)
-
         val textIncome = view.findViewById<TextView>(R.id.textIncome)
         val textExpense = view.findViewById<TextView>(R.id.textExpence)
         val textBalance = view.findViewById<TextView>(R.id.textBalance)

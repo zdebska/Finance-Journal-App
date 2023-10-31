@@ -1,5 +1,9 @@
-package com.example.journalapp
+/*
+* @author Assatulla Dias (xassat00)
+* @brief Main Activity, where everything starts
+* */
 
+package com.example.journalapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
@@ -8,6 +12,7 @@ import com.example.journalapp.fragments.HomeFragment
 import com.example.journalapp.fragments.TransactionsFragment
 import com.example.journalapp.fragments.adapters.ViewPagerAdapter
 import com.google.android.material.tabs.TabLayout
+
 
 class MainActivity : AppCompatActivity() {
     private val viewPager:ViewPager
@@ -22,9 +27,8 @@ class MainActivity : AppCompatActivity() {
         setUpTabs()
     }
 
-
+    // Function that set up a Tab Layout
     private fun setUpTabs() {
-
         val adapter = ViewPagerAdapter(supportFragmentManager)
         adapter.addFragment(HomeFragment(),"Home")
         adapter.addFragment(TransactionsFragment(), "Transactions")
@@ -37,9 +41,9 @@ class MainActivity : AppCompatActivity() {
         tabs.getTabAt(0)!!.setIcon(R.drawable.baseline_home_24)
         tabs.getTabAt(1)!!.setIcon(R.drawable.baseline_currency_exchange_24)
         tabs.getTabAt(2)!!.setIcon(R.drawable.baseline_bar_chart_24)
-
     }
 
+    // Function that changes the selected tab in a TabLayout to the one specified by the index.
     fun changeTab(index: Int) {
         tabs.getTabAt(index)?.select()
     }

@@ -1,3 +1,8 @@
+/*
+* @author Assatulla Dias (xassat00)
+* @brief A fragment that shows balance info
+* */
+
 package com.example.journalapp.fragments
 
 import android.os.Bundle
@@ -26,9 +31,6 @@ class BalanceInfoFragment : Fragment() {
             // Pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
-
-
         return view
     }
-
 }
