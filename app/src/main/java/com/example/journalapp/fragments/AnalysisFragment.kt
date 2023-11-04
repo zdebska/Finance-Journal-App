@@ -1,3 +1,7 @@
+/*
+* @author Zdebska Kateryna (xzdebs00)
+* @brief A fragment that shows analysis of transactions
+* */
 package com.example.journalapp.fragments
 
 import android.content.res.ColorStateList
