@@ -192,7 +192,6 @@ class AddTransactionFragment : Fragment() {
             val status = dbHandler.addTransaction(newRecord)
 
             if (status > -1) {
-                print("date:$recDate   amount:$recAmount   catName:$catName Note: $recNote TransType: $recTransType\n")
                 Toast.makeText(requireContext(), "Record saved", Toast.LENGTH_LONG).show()
                 amountBtn.text.clear()
                 noteBtn.text.clear()

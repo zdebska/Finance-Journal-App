@@ -11,12 +11,76 @@
         android:layout_height="match_parent">
 
         <TextView
+            android:id="@+id/titleTransaction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Transactions"
-            android:textColor="@android:color/black"
-            android:textSize="24sp" />
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginTop="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16sp"
+            android:background="@color/white"
+            android:drawablePadding="12sp"
+            android:text="@string/transaction"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <LinearLayout
+            android:id="@+id/TransactionTypeLayout"
+            android:layout_width="304dp"
+            android:layout_height="37dp"
+            android:layout_below="@+id/titleTransaction"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ellipse_choose_income_outcome"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/selectExpTransactions"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/white"
+                android:gravity="center_horizontal"
+                android:text="@string/expense"
+                android:textColor="@color/black"
+                android:textSize="13sp"/>
+
+            <Button
+                android:id="@+id/selectIncTransactions"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="3dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/main_grey_color"
+                android:gravity="center_horizontal"
+                android:text="@string/income"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/TransContainer"
+            android:layout_width="380dp"
+            android:layout_height="500dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/TransactionTypeLayout"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical" >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewTransactions"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical" />
+        </LinearLayout>
 
     </RelativeLayout>
 
