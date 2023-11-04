@@ -1,3 +1,7 @@
+/*
+* @author Alakaev Kambulat (xalaka00)
+* @brief Bind data of a record from the "transactions" table to the view of the main page
+* */
 package com.example.journalapp.fragments.adapters
 
 import android.annotation.SuppressLint

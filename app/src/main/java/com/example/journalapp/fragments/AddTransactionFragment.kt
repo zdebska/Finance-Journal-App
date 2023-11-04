@@ -1,3 +1,7 @@
+/*
+* @author Alakaev Kambulat (xalaka00)
+* @brief A fragment that shows and sets the "add transaction" page
+* */
 package com.example.journalapp.fragments
 
 import android.annotation.SuppressLint
@@ -44,6 +48,7 @@ class AddTransactionFragment : Fragment() {
         val whiteClr = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
         val greyClr = ColorStateList.valueOf(Color.parseColor("#FFDEDEDE"))
 
+        // set the default colors fo the transaction type buttons
         expBtn.backgroundTintList = whiteClr
         incBtn.backgroundTintList = greyClr
 
@@ -95,12 +100,13 @@ class AddTransactionFragment : Fragment() {
         }
 
         arrowBackBtn.setOnClickListener {
-            // Pop the fragment from the back stack to return to the previous fragment
+            // pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
         return view
     }
 
+    // set today as a default date when creating a new transaction record
     private fun setActualDate(dateBtn: Button, calendar: Calendar) {
         val currentDate = Date(calendar.timeInMillis)
         // Format the date as a string and pass it as text to the button
@@ -109,6 +115,7 @@ class AddTransactionFragment : Fragment() {
         dateBtn.text = formattedDate
     }
 
+    // set date selector to be shown on date button click
     private fun dateSelector(dateBtn: Button, calendar: Calendar, dateImg: ImageView) {
         for (i in listOf<View>(dateBtn, dateImg)) {
             i.setOnClickListener() {

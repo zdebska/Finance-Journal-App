@@ -1,3 +1,8 @@
+/*
+* @author Alakaev Kambulat (xalaka00)
+* @brief Database implementation
+* */
+
 package com.example.journalapp.models
 
 import android.annotation.SuppressLint
@@ -10,6 +15,7 @@ import android.database.sqlite.SQLiteOpenHelper
 
 class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
+    // basis constants with names of tables and fields
     companion object {
         const val DATABASE_NAME = "FinanceJournalDatabase.db"
         const val DATABASE_VERSION = 1
@@ -28,6 +34,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
 
 
     override fun onCreate(db: SQLiteDatabase?) {
+        // create tables
         val createTransactionsTable = "CREATE TABLE IF NOT EXISTS $TABLE_TRANSACTIONS" +
                 "($KEY_ID INTEGER PRIMARY KEY," +
                 "$KEY_AMOUNT REAL NOT NULL," +
@@ -57,8 +64,9 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         onCreate(db)
     }
 
-
+    // add transaction to the "transactions" table
     fun addTransaction(transaction: TransactionModel): Long {
+        // set database op mode to write
         val db = this.writableDatabase
 
         //create container and fill it with passed data from a user
@@ -78,9 +86,11 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     }
 
 
+    // add category to the "categories" table
     fun addCategory(category: CategoryModel): Long {
         val db = this.writableDatabase
 
+        // create container and fill it with passed data from a user
         val contentValues = ContentValues()
         contentValues.put(KEY_NAME, category.name)
         contentValues.put(KEY_ICON, category.iconPath)
@@ -94,12 +104,14 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
-
+    // select transactions from the "transactions" table depending on a condition(if there is one)
     @SuppressLint("Range")
     fun viewTransactions(condition: String): ArrayList<TransactionModel> {
+        // create an array whose elements are records from the table
         val transList: ArrayList<TransactionModel> = ArrayList()
         val selectQuery: String
 
+        // set query depending on a presence of condition
         if (condition.isNotEmpty()) {
             selectQuery = "SELECT * FROM $TABLE_TRANSACTIONS $condition"
         } else {
@@ -109,6 +121,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         val db = this.readableDatabase
         var cursor: Cursor? = null
 
+        // create cursor in order to iterate through the data of the table
         try {
             cursor = db.rawQuery(selectQuery, null)
         } catch (e: SQLException) {
@@ -149,6 +162,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     }
 
 
+    //  select transactions from the "categories" table (TODO: add condition processing)
     @SuppressLint("Range")
     fun viewCategories(): ArrayList<CategoryModel> {
         val catList: ArrayList<CategoryModel> = ArrayList()
@@ -157,6 +171,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         val db = this.readableDatabase
         var cursor: Cursor? = null
 
+        // create cursor in order to iterate through the data of the table
         try {
             cursor = db.rawQuery(selectQuery, null)
         } catch (e: SQLException) {
@@ -184,6 +199,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     }
 
 
+    // update existing transaction
     fun updateTransaction(transaction: TransactionModel): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()
@@ -203,6 +219,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     }
 
 
+    // delete existing transaction
     fun deleteTransaction(transaction: TransactionModel): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()
@@ -214,6 +231,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     }
 
 
+    // get the id of category by its name
     @SuppressLint("Range")
     fun getCategoryId(catName: String): Int {
         val selectQuery = "SELECT * FROM $TABLE_CATEGORIES WHERE name = '$catName'"

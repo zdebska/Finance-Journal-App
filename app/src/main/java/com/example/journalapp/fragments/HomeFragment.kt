@@ -80,6 +80,7 @@ class HomeFragment : Fragment() {
     private fun showLastTransactions(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val layoutManager = LinearLayoutManager(requireContext())
+        // TODO: check where it takes a lot of time to give a control to the db
         recyclerView.layoutManager = layoutManager
         val dbHandler: AppDB = AppDB(requireContext())
         val records = dbHandler.viewTransactions("ORDER BY ${AppDB.KEY_ID} DESC LIMIT 4")
