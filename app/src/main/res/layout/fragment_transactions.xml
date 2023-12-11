@@ -61,6 +61,12 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_below="@+id/TransactionTypeLayout"
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="380dp"
+            android:layout_height="500dp">
+
         <LinearLayout
             android:id="@+id/TransContainer"
             android:layout_width="380dp"
@@ -81,6 +87,7 @@
                 android:layout_centerHorizontal="true"
                 android:orientation="vertical" />
         </LinearLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
 

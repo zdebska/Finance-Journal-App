@@ -19,9 +19,10 @@ import com.example.journalapp.MainActivity
 import com.example.journalapp.R
 import com.example.journalapp.fragments.adapters.RecordAdapter
 import com.example.journalapp.models.AppDB
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 class HomeFragment : Fragment() {
+    private lateinit var view: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -31,7 +32,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        view = inflater.inflate(R.layout.fragment_home, container, false)
 
         val mainActivity = requireActivity() as MainActivity
         val textSeeAll = view.findViewById<TextView>(R.id.textSeeAll)
@@ -59,7 +60,7 @@ class HomeFragment : Fragment() {
             val addTransactionFragment = AddTransactionFragment()
 
             fragmentTransaction.add(R.id.main_container, addTransactionFragment)
-            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.addToBackStack("fragmentTransaction")
             fragmentTransaction.commit()
         }
 
@@ -72,6 +73,14 @@ class HomeFragment : Fragment() {
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
+        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+
+        // Set up the refresh listener
+        swipeRefreshLayout.setOnRefreshListener {
+            showLastTransactions(view)
+            // Signal that the refresh has finished
+            swipeRefreshLayout.isRefreshing = false
+        }
 
         showLastTransactions(view)
         return view
@@ -80,11 +89,16 @@ class HomeFragment : Fragment() {
     private fun showLastTransactions(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val layoutManager = LinearLayoutManager(requireContext())
-        // TODO: check where it takes a lot of time to give a control to the db
         recyclerView.layoutManager = layoutManager
         val dbHandler: AppDB = AppDB(requireContext())
         val records = dbHandler.viewTransactions("ORDER BY ${AppDB.KEY_ID} DESC LIMIT 4")
         val adapter = RecordAdapter(records)
         recyclerView.adapter = adapter
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        showLastTransactions(view)
     }
 }

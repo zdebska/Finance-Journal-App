@@ -130,7 +130,11 @@
             android:clickable="true"
 
             />
-
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_below="@+id/textlastTransaction"
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="380dp"
+            android:layout_height="332dp">
         <LinearLayout
             android:id="@+id/LastTransContainer"
             android:layout_width="380dp"
@@ -151,10 +155,9 @@
                 android:layout_centerHorizontal="true"
                 android:orientation="vertical" />
         </LinearLayout>
-
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
-
 
 
 </FrameLayout>
