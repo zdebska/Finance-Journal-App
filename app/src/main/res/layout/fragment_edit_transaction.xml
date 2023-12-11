@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    android:windowSoftInputMode="adjustResize"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:windowSoftInputMode="adjustResize"
     android:layout_width="match_parent"
+    android:clickable="true"
     android:layout_height="match_parent"
-    tools:context=".fragments.AddTransactionFragment"
-    android:id="@+id/addTransactionFragment"
+    tools:context=".fragments.EditTransactionFragment"
+    android:id="@+id/editTransactionFragment"
     android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
         <TextView
             android:id="@+id/titleAddTransaction"
@@ -29,7 +32,7 @@
             android:textSize="25sp" />
 
         <ImageView
-            android:id="@+id/arrowBackBtn"
+            android:id="@+id/arrowBackBtn_e"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/titleAddTransaction"
@@ -50,7 +53,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/selectExpTransactions"
+                android:id="@+id/selectExpTransactions_e"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="3dp"
@@ -62,7 +65,7 @@
                 android:textSize="13sp"/>
 
             <Button
-                android:id="@+id/selectIncTransactions"
+                android:id="@+id/selectIncTransactions_e"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="2dp"
@@ -87,7 +90,7 @@
             android:textSize="18sp"/>
 
         <LinearLayout
-            android:id="@+id/DateSelectionLayout"
+            android:id="@+id/DateSelectionLayout_e"
             android:layout_width="304dp"
             android:layout_height="37dp"
             android:layout_below="@+id/dateID"
@@ -103,15 +106,17 @@
                 />
 
             <Button
-                android:id="@+id/SelectDateBtn"
+                android:id="@+id/SelectDateBtn_e"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="3dp"
                 android:layout_weight="2"
                 android:backgroundTint="@color/white"
                 android:gravity="left"
+                android:clickable="true"
                 android:textColor="@color/black"
-                android:textSize="15sp"/>
+                android:textSize="15sp"
+                android:focusable="true" />
 
             <ImageView
                 android:id="@+id/SelectDateImg"
@@ -119,7 +124,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/baseline_arrow_forward_ios_24"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true" />
 
         </LinearLayout>
 
@@ -129,7 +135,7 @@
             android:id="@+id/amountID"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/DateSelectionLayout"
+            android:layout_below="@+id/DateSelectionLayout_e"
             android:layout_alignStart="@id/TransactionTypeLayout"
             android:layout_marginStart="0dp"
             android:layout_marginTop="30dp"
@@ -152,7 +158,7 @@
                 app:srcCompat="@drawable/add_trans_amount_icon" />
 
             <EditText
-                android:id="@+id/SelectAmountBtn"
+                android:id="@+id/SelectAmountBtn_e"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
@@ -164,7 +170,8 @@
                 android:textSize="15sp"
                 android:gravity="center_vertical"
                 android:clickable="true"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"
+                android:focusable="true" />
 
             <ImageView
                 android:id="@+id/SelectAmountImg"
@@ -172,7 +179,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/baseline_arrow_forward_ios_24"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
 
         <TextView
@@ -208,10 +216,12 @@
                 android:layout_weight="2"
                 android:backgroundTint="@color/white"
                 android:text="@string/cat_none"
+                android:clickable="true"
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:gravity="left"
-                tools:ignore="RtlHardcoded" />
+                tools:ignore="RtlHardcoded"
+                android:focusable="true" />
 
             <ImageView
                 android:id="@+id/SelectCategoryImg"
@@ -219,7 +229,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/baseline_arrow_forward_ios_24"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true" />
 
         </LinearLayout>
 
@@ -252,6 +263,7 @@
             <EditText
                 android:id="@+id/SelectNoteBtn"
                 android:layout_width="0dp"
+                android:windowSoftInputMode="adjustResize"
                 android:layout_height="match_parent"
                 android:layout_marginStart="3dp"
                 android:layout_weight="2"
@@ -262,7 +274,8 @@
                 android:maxLength="30"
                 android:textSize="15sp"
                 android:gravity="center_vertical"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true" />
 
             <ImageView
                 android:id="@+id/SelectNoteImg"
@@ -270,25 +283,46 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/baseline_arrow_forward_ios_24"
-                android:clickable="true"/>
+                android:clickable="true"
+                android:focusable="true" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="61dp"
             android:layout_height="62dp"
-            android:background="@drawable/circle_save_transaction_btn"
-            android:orientation="horizontal"
             android:layout_below="@id/NoteLayout"
+            android:layout_alignStart="@id/NoteLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="130dp"
-            >
-        <Button
-            android:id="@+id/saveTransactionBtn"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#00FFFFFF"
-             />
+            android:background="@drawable/circle_save_transaction_btn"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/saveTransactionBtn_e"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF" />
         </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="61dp"
+            android:layout_height="62dp"
+            android:layout_below="@id/NoteLayout"
+            android:layout_alignEnd="@id/NoteLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="130dp"
+            android:background="@drawable/baseline_delete_outline_24"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/deleteTransactionBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF" />
+        </LinearLayout>
+
+
     </RelativeLayout>
 
 

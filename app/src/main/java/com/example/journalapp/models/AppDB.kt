@@ -85,22 +85,32 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
-
-    // add category to the "categories" table
-    fun addCategory(category: CategoryModel): Long {
+    // update existing transaction
+    fun updateTransaction(transaction: TransactionModel, transID: Int): Int {
         val db = this.writableDatabase
-
-        // create container and fill it with passed data from a user
         val contentValues = ContentValues()
-        contentValues.put(KEY_NAME, category.name)
-        contentValues.put(KEY_ICON, category.iconPath)
 
-        // insert obtained data to the table "categories"
-        val success = db.insert(TABLE_CATEGORIES, null, contentValues)
+        contentValues.put(KEY_AMOUNT, transaction.amount)
+        contentValues.put(KEY_NOTE, transaction.note)
+        contentValues.put(KEY_DATE, transaction.creationDate)
+        contentValues.put(KEY_CAT, transaction.category)
+        contentValues.put(KEY_TRANS_TYPE, transaction.transType)
 
-        // close db connection
+        val success = db.update(
+            TABLE_TRANSACTIONS, contentValues,
+            "$KEY_ID=$transID", null
+        )
         db.close()
-        // return the result of insertion
+        return success
+    }
+
+
+    // delete existing transaction
+    fun deleteTransaction(transID: Int): Int {
+        val db = this.writableDatabase
+        val success = db.delete(TABLE_TRANSACTIONS, "$KEY_ID=$transID", null)
+
+        db.close()
         return success
     }
 
@@ -162,6 +172,24 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     }
 
 
+    // add category to the "categories" table
+    fun addCategory(category: CategoryModel): Long {
+        val db = this.writableDatabase
+
+        // create container and fill it with passed data from a user
+        val contentValues = ContentValues()
+        contentValues.put(KEY_NAME, category.name)
+        contentValues.put(KEY_ICON, category.iconPath)
+
+        // insert obtained data to the table "categories"
+        val success = db.insert(TABLE_CATEGORIES, null, contentValues)
+
+        // close db connection
+        db.close()
+        // return the result of insertion
+        return success
+    }
+
     //  select transactions from the "categories" table (TODO: add condition processing)
     @SuppressLint("Range")
     fun viewCategories(): ArrayList<CategoryModel> {
@@ -196,38 +224,6 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         }
         db.close()
         return catList
-    }
-
-
-    // update existing transaction
-    fun updateTransaction(transaction: TransactionModel): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues()
-
-        contentValues.put(KEY_AMOUNT, transaction.amount)
-        contentValues.put(KEY_NOTE, transaction.note)
-        contentValues.put(KEY_DATE, transaction.creationDate)
-        contentValues.put(KEY_CAT, transaction.category)
-        contentValues.put(KEY_TRANS_TYPE, transaction.transType)
-
-        val success = db.update(
-            TABLE_TRANSACTIONS, contentValues,
-            KEY_ID + '=' + transaction.id, null
-        )
-        db.close()
-        return success
-    }
-
-
-    // delete existing transaction
-    fun deleteTransaction(transaction: TransactionModel): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put(KEY_ID, transaction.id)
-        val success = db.delete(TABLE_TRANSACTIONS, KEY_ID + '=' + transaction.id, null)
-
-        db.close()
-        return success
     }
 
 

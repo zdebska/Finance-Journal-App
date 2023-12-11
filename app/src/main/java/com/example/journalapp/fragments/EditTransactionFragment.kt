@@ -1,7 +1,3 @@
-/*
-* @author Alakaev Kambulat (xalaka00)
-* @brief A fragment that shows and sets the "add transaction" page
-* */
 package com.example.journalapp.fragments
 
 import android.annotation.SuppressLint
@@ -10,6 +6,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,12 +22,21 @@ import com.example.journalapp.R
 import com.example.journalapp.models.AppDB
 import com.example.journalapp.models.TransactionModel
 import java.util.Calendar
-import java.util.Date
-import java.text.SimpleDateFormat
-import java.util.Locale
 
+class EditTransactionFragment : Fragment() {
 
-class AddTransactionFragment : Fragment() {
+    companion object {
+        private const val ARG_DATA = "data"
+
+        fun newInstance(data: TransactionModel): EditTransactionFragment {
+            val fragment = EditTransactionFragment()
+            val args = Bundle()
+            args.putParcelable(ARG_DATA, data)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -39,24 +45,23 @@ class AddTransactionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_add_transaction, container, false)
+        val view = inflater.inflate(R.layout.fragment_edit_transaction, container, false)
 
-        val expBtn = view.findViewById<Button>(R.id.selectExpTransactions)
-        val incBtn = view.findViewById<Button>(R.id.selectIncTransactions)
+        val record: TransactionModel? = arguments?.getParcelable(ARG_DATA)
+
+
+        val expBtn = view.findViewById<Button>(R.id.selectExpTransactions_e)
+        val incBtn = view.findViewById<Button>(R.id.selectIncTransactions_e)
 
         val whiteClr = ColorStateList.valueOf(Color.parseColor("#FFFFFF"))
         val greyClr = ColorStateList.valueOf(Color.parseColor("#FFDEDEDE"))
 
-        // set the default colors fo the transaction type buttons
-        expBtn.backgroundTintList = whiteClr
-        incBtn.backgroundTintList = greyClr
+        val arrowBackBtn = view.findViewById<ImageView>(R.id.arrowBackBtn_e)
 
-        val arrowBackBtn = view.findViewById<ImageView>(R.id.arrowBackBtn)
-        val dateBtn = view.findViewById<Button>(R.id.SelectDateBtn)
+        val dateBtn = view.findViewById<Button>(R.id.SelectDateBtn_e)
         val dateImg = view.findViewById<ImageView>(R.id.SelectDateImg)
 
-        val amountBtn = view.findViewById<EditText>(R.id.SelectAmountBtn)
+        val amountBtn = view.findViewById<EditText>(R.id.SelectAmountBtn_e)
         val amountImg = view.findViewById<ImageView>(R.id.SelectAmountImg)
 
         val categoryBtn = view.findViewById<Button>(R.id.SelectCategoryBtn)
@@ -65,12 +70,28 @@ class AddTransactionFragment : Fragment() {
         val noteBtn = view.findViewById<EditText>(R.id.SelectNoteBtn)
         val noteImg = view.findViewById<ImageView>(R.id.SelectNoteImg)
 
-        val saveBtn = view.findViewById<Button>(R.id.saveTransactionBtn)
+        val saveBtn = view.findViewById<Button>(R.id.saveTransactionBtn_e)
+        val delBtn = view.findViewById<Button>(R.id.deleteTransactionBtn)
 
-        // Get the current date and set it to the button Date as a text
+        // Get the current date
         val calendar = Calendar.getInstance()
-        setActualDate(dateBtn, calendar)
 
+
+        dateBtn.text = record?.creationDate
+        amountBtn.setText(record?.amount.toString())
+        noteBtn.setText(record?.note)
+
+        //TODO: add category reading from a record
+
+        // set colors of the transaction type buttons depending on the record transaction type
+        if (record?.transType == "Expense") {
+
+            expBtn.backgroundTintList = whiteClr
+            incBtn.backgroundTintList = greyClr
+        } else {
+            expBtn.backgroundTintList = greyClr
+            incBtn.backgroundTintList = whiteClr
+        }
         // set listener to the date button to open calendar onclick
         dateSelector(dateBtn, calendar, dateImg)
 
@@ -91,9 +112,15 @@ class AddTransactionFragment : Fragment() {
             expBtn.backgroundTintList = greyClr
         }
 
-        // save transaction to DB
+        // update edited transaction and save to DB
         saveBtn.setOnClickListener() {
-            val status = addRecord(view, dateBtn, amountBtn, categoryBtn, noteBtn)
+            val status = editRecord(view, dateBtn, amountBtn, categoryBtn, noteBtn, record)
+            if (status == 1) {
+                requireActivity().supportFragmentManager.popBackStack()
+            }
+        }
+        delBtn.setOnClickListener() {
+            val status = delRecord(record)
             if (status == 1) {
                 requireActivity().supportFragmentManager.popBackStack()
             }
@@ -104,15 +131,6 @@ class AddTransactionFragment : Fragment() {
             requireActivity().supportFragmentManager.popBackStack()
         }
         return view
-    }
-
-    // set today as a default date when creating a new transaction record
-    private fun setActualDate(dateBtn: Button, calendar: Calendar) {
-        val currentDate = Date(calendar.timeInMillis)
-        // Format the date as a string and pass it as text to the button
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
-        val formattedDate = dateFormat.format(currentDate)
-        dateBtn.text = formattedDate
     }
 
     // set date selector to be shown on date button click
@@ -141,6 +159,7 @@ class AddTransactionFragment : Fragment() {
         for (i in listOf(Btn, Img)) {
             i.setOnClickListener() {
                 // open keyboard
+                Btn.requestFocus()
                 val inputMethodManager =
                     Btn.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.showSoftInput(Btn, InputMethodManager.SHOW_IMPLICIT)
@@ -165,11 +184,13 @@ class AddTransactionFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun addRecord(view: View, dateBtn: Button, amountBtn: EditText, categoryBtn: Button,
-        noteBtn: EditText): Int
-    {
-        val expBtn = view.findViewById<Button>(R.id.selectExpTransactions)
-        val whiteClr = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+    private fun editRecord(
+        view: View, dateBtn: Button, amountBtn: EditText, categoryBtn: Button,
+        noteBtn: EditText, record: TransactionModel?
+    ): Int {
+        val expBtn = view.findViewById<Button>(R.id.selectExpTransactions_e)
+        val whiteClr =
+            ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
 
         val recTransType: String =
             if (expBtn.backgroundTintList == whiteClr) {
@@ -184,13 +205,15 @@ class AddTransactionFragment : Fragment() {
         val recNote = noteBtn.text.toString()
 
         val dbHandler: AppDB = AppDB(requireContext())
+
         val recCategory = dbHandler.getCategoryId(catName)
 
-
         if (recAmount.isNotEmpty()) { // && catName != "None"
-            val newRecord = TransactionModel(0, recAmount.toFloat(), recNote, recDate,
-                recCategory, recTransType)
-            val status = dbHandler.addTransaction(newRecord)
+            val editedRecord = TransactionModel(
+                0, recAmount.toFloat(), recNote, recDate,
+                recCategory, recTransType
+            )
+            val status = dbHandler.updateTransaction(editedRecord, record!!.id)
 
             if (status > -1) {
                 Toast.makeText(requireContext(), "Record saved", Toast.LENGTH_LONG).show()
@@ -209,4 +232,14 @@ class AddTransactionFragment : Fragment() {
         }
         return 0
     }
+
+
+    private fun delRecord(record: TransactionModel?): Int {
+        val dbHandler: AppDB = AppDB(requireContext())
+        return dbHandler.deleteTransaction(record!!.id)
+    }
+
+
 }
+
+

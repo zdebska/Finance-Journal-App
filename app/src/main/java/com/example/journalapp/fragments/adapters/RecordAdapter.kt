@@ -5,13 +5,16 @@
 package com.example.journalapp.fragments.adapters
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.journalapp.R
+import com.example.journalapp.fragments.EditTransactionFragment
 import com.example.journalapp.models.TransactionModel
 
 class RecordAdapter(private val records: List<TransactionModel>) : RecyclerView.Adapter<RecordAdapter.CustomViewHolder>() {
@@ -33,6 +36,15 @@ class RecordAdapter(private val records: List<TransactionModel>) : RecyclerView.
         }
         else {
             holder.transTypeIcon.setImageResource(R.drawable.baseline_arrow_circle_down_24)
+        }
+
+        holder.itemView.setOnClickListener {
+            val fragment = EditTransactionFragment.newInstance(record)
+            val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
+            val transaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.main_container, fragment, EditTransactionFragment::class.java.simpleName)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
     }
 
