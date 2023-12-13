@@ -21,6 +21,8 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         const val DATABASE_VERSION = 1
         const val TABLE_TRANSACTIONS = "transactions"
         const val TABLE_CATEGORIES = "categories"
+        const val TABLE_GOALS = "goals"
+        const val TABLE_GOALS_TRANSACTIONS = "goal_categories"
 
         const val KEY_ID = "id"
         const val KEY_AMOUNT = "amount"
@@ -30,6 +32,8 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         const val KEY_CAT = "category"
         const val KEY_NAME = "name"
         const val KEY_ICON = "icon_path"
+        const val KEY_GOAL = "goal"
+        const val KEY_END_DATE = "end_date"
     }
 
 
@@ -44,23 +48,44 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
                 "$KEY_TRANS_TYPE TEXT," +
                 "CHECK ($KEY_TRANS_TYPE IN ('Expense','Income'))," +
                 "FOREIGN KEY ($KEY_CAT) REFERENCES $TABLE_CATEGORIES($KEY_ID)" +
-                ")"
+                ");"
 
 
         val createCategoryTable = "CREATE TABLE IF NOT EXISTS $TABLE_CATEGORIES" +
                 "( $KEY_ID INTEGER PRIMARY KEY," +
                 "$KEY_NAME TEXT NOT NULL," +
                 "$KEY_ICON TEXT NOT NULL" +
-                ")"
+                ");"
+
+
+        val createGoalsTable = "CREATE TABLE IF NOT EXISTS $TABLE_GOALS" +
+                "( $KEY_ID INTEGER PRIMARY KEY," +
+                "$KEY_NAME TEXT NOT NULL," +
+                "$KEY_AMOUNT REAL NOT NULL," +
+                "$KEY_END_DATE NUMERIC DEFAULT CURRENT_TIMESTAMP" +
+                ");"
+
+
+        val createGoalsTransactionsTable = "CREATE TABLE IF NOT EXISTS $TABLE_GOALS_TRANSACTIONS" +
+                "( $KEY_ID INTEGER PRIMARY KEY," +
+                "$KEY_AMOUNT REAL NOT NULL," +
+                "$KEY_NOTE TEXT NOT NULL," +
+                "$KEY_DATE NUMERIC DEFAULT CURRENT_TIMESTAMP," +
+                "$KEY_GOAL INTEGER" +
+                ");"
 
         db?.execSQL(createTransactionsTable)
         db?.execSQL(createCategoryTable)
+        db?.execSQL(createGoalsTable)
+        db?.execSQL(createGoalsTransactionsTable)
     }
 
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS $TABLE_TRANSACTIONS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_CATEGORIES")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_GOALS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_GOALS_TRANSACTIONS")
         onCreate(db)
     }
 
@@ -85,6 +110,42 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
+    fun addGoal(goal: GoalModel): Long {
+        // set database op mode to write
+        val db = this.writableDatabase
+
+        //create container and fill it with passed data from a user
+        val contentValues = ContentValues()
+        contentValues.put(KEY_NAME, goal.name)
+        contentValues.put(KEY_AMOUNT, goal.amount)
+        contentValues.put(KEY_END_DATE, goal.endDate)
+
+        // insert obtained data to the table "transactions"
+        val success = db.insert(TABLE_GOALS, null, contentValues)
+        // close db connection
+        db.close()
+        // return the result of insertion
+        return success
+    }
+
+    fun addGoalTransaction(transaction: GoalTransactionModel): Long {
+        // set database op mode to write
+        val db = this.writableDatabase
+
+        //create container and fill it with passed data from a user
+        val contentValues = ContentValues()
+        contentValues.put(KEY_AMOUNT, transaction.amount)
+        contentValues.put(KEY_NOTE, transaction.note)
+        contentValues.put(KEY_DATE, transaction.creationDate)
+        contentValues.put(KEY_GOAL, transaction.goal)
+
+        // insert obtained data to the table "transactions"
+        val success = db.insert(TABLE_GOALS_TRANSACTIONS, null, contentValues)
+        // close db connection
+        db.close()
+        // return the result of insertion
+        return success
+    }
 
     // add category to the "categories" table
     fun addCategory(category: CategoryModel): Long {
@@ -152,6 +213,103 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
                     creationDate = creationDate,
                     category = category,
                     transType = transType
+                )
+                transList.add(transaction)
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return transList
+    }
+
+    @SuppressLint("Range")
+    fun viewGoals(): ArrayList<GoalModel> {
+        // create an array whose elements are records from the goals table
+        val goalList: ArrayList<GoalModel> = ArrayList()
+        val selectQuery = "SELECT * FROM $TABLE_GOALS"
+
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        // create cursor in order to iterate through the data of the table
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        } catch (e: SQLException) {
+            db.execSQL(selectQuery)
+            db.close()
+            return ArrayList()
+        }
+
+        var id: Int
+        var name: String
+        var amount: Float
+        var endDate: String
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
+                name = cursor.getString(cursor.getColumnIndex(KEY_NAME))
+                amount = cursor.getFloat(cursor.getColumnIndex(KEY_AMOUNT))
+                endDate = cursor.getString(cursor.getColumnIndex(KEY_END_DATE))
+
+                val goal = GoalModel(
+                    id = id,
+                    name = name,
+                    amount = amount,
+                    endDate = endDate
+                )
+                goalList.add(goal)
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return goalList
+    }
+
+    @SuppressLint("Range")
+    fun viewGoalsTransactions(condition: String): ArrayList<GoalTransactionModel> {
+        // create an array whose elements are records from the table
+        val transList: ArrayList<GoalTransactionModel> = ArrayList()
+        val selectQuery: String
+
+        // set query depending on a presence of condition
+        if (condition.isNotEmpty()) {
+            selectQuery = "SELECT * FROM $TABLE_GOALS_TRANSACTIONS $condition"
+        } else {
+            selectQuery = "SELECT * FROM $TABLE_GOALS_TRANSACTIONS"
+        }
+
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        // create cursor in order to iterate through the data of the table
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        } catch (e: SQLException) {
+            db.execSQL(selectQuery)
+            db.close()
+            return ArrayList()
+        }
+        var id: Int
+        var amount: Float
+        var note: String
+        var creationDate: String
+        var goal: Int
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
+                amount = cursor.getFloat(cursor.getColumnIndex(KEY_AMOUNT))
+                note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
+                creationDate = cursor.getString(cursor.getColumnIndex(KEY_DATE))
+                goal = cursor.getInt(cursor.getColumnIndex(KEY_GOAL))
+
+                val transaction = GoalTransactionModel(
+                    id = id,
+                    amount = amount,
+                    note = note,
+                    creationDate = creationDate,
+                    goal = goal
                 )
                 transList.add(transaction)
             } while (cursor.moveToNext())

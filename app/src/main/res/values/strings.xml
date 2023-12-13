@@ -25,4 +25,12 @@
         <item>Month</item>
         <item>Year</item>
     </string-array>
+
+    <string name="goals">Goals</string>
+    <string name="name">Name</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="addGoal">Add goal</string>
+    <string name="name_background">Write a name</string>
+    <string name="deadline">Deadline</string>
 </resources>
