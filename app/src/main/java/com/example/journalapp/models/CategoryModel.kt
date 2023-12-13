@@ -5,5 +5,5 @@
 package com.example.journalapp.models
 
 // class representing data of a record from the "categories" table
-class CategoryModel(val id: Int = 0, val name: String, val iconPath: String) {
+class CategoryModel(val id: Int = 100, val name: String, val iconPath: String, val colorResId: Int) {
 }

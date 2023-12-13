@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.journalapp.R
 import com.example.journalapp.models.CategoryModel
@@ -28,6 +29,7 @@ class CategoryAdapter(
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
         val category = categories[position]
         holder.categoryName.text = category.name
+        holder.categoryIcon.setColorFilter(ContextCompat.getColor(holder.itemView.context, category.colorResId))
 
         if(category.name == "Food") {
             holder.categoryIcon.setImageResource(R.drawable.baseline_food_bank_24)

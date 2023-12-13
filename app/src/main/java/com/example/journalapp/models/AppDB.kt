@@ -17,7 +17,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     // basis constants with names of tables and fields
     companion object {
         const val DATABASE_NAME = "FinanceJournalDatabase.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val TABLE_TRANSACTIONS = "transactions"
         const val TABLE_CATEGORIES = "categories"
 
@@ -29,6 +29,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         const val KEY_CAT = "category"
         const val KEY_NAME = "name"
         const val KEY_ICON = "icon_path"
+        const val KEY_COLOR = "color_icon"
     }
 
 
@@ -49,7 +50,8 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         val createCategoryTable = "CREATE TABLE IF NOT EXISTS $TABLE_CATEGORIES" +
                 "( $KEY_ID INTEGER PRIMARY KEY," +
                 "$KEY_NAME TEXT NOT NULL," +
-                "$KEY_ICON TEXT NOT NULL" +
+                "$KEY_ICON TEXT NOT NULL," +
+                "$KEY_COLOR INTEGER NOT NULL" +
                 ")"
 
         db?.execSQL(createTransactionsTable)
@@ -91,14 +93,14 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
 
     fun insertDefaultCategories() {
         val defaultCategories = listOf(
-            CategoryModel(1, "Food", "baseline_food_bank_24"),
-            CategoryModel(2, "Shopping", "baseline_shopping_cart_24"),
-            CategoryModel(3, "Taxes", "baseline_account_balance_24"),
-            CategoryModel(4, "Education", "baseline_school_24"),
-            CategoryModel(5, "Salary", "baseline_attach_money_24"),
-            CategoryModel(6, "Rent", "baseline_home_24"),
-            CategoryModel(7, "Relax", "baseline_sports_tennis_24"),
-            CategoryModel(8, "Other", "baseline_other_houses_24")
+            CategoryModel(1, "Food", "baseline_food_bank_24", android.R.color.black),
+            CategoryModel(2, "Shopping", "baseline_shopping_cart_24", android.R.color.black),
+            CategoryModel(3, "Taxes", "baseline_account_balance_24", android.R.color.black),
+            CategoryModel(4, "Education", "baseline_school_24", android.R.color.black),
+            CategoryModel(5, "Salary", "baseline_attach_money_24", android.R.color.black),
+            CategoryModel(6, "Rent", "baseline_home_24", android.R.color.black),
+            CategoryModel(7, "Relax", "baseline_sports_tennis_24", android.R.color.black),
+            CategoryModel(8, "Other", "baseline_other_houses_24", android.R.color.black)
         )
 
         for (category in defaultCategories) {
@@ -222,6 +224,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         val contentValues = ContentValues()
         contentValues.put(KEY_NAME, category.name)
         contentValues.put(KEY_ICON, category.iconPath)
+        contentValues.put(KEY_COLOR, category.colorResId)
 
         // insert obtained data to the table "categories"
         val success = db.insert(TABLE_CATEGORIES, null, contentValues)
@@ -257,13 +260,15 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         var id: Int
         var name: String
         var iconPath: String
+        var colorResId: Int
         if (cursor.moveToFirst()) {
             do {
                 id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
                 name = cursor.getString(cursor.getColumnIndex(KEY_NAME))
                 iconPath = cursor.getString(cursor.getColumnIndex(KEY_ICON))
+                colorResId = cursor.getInt(cursor.getColumnIndex(KEY_COLOR))
 
-                val category = CategoryModel(id = id, name = name, iconPath = iconPath)
+                val category = CategoryModel(id = id, name = name, iconPath = iconPath, colorResId = colorResId)
                 catList.add(category)
             } while (cursor.moveToNext())
             cursor.close()

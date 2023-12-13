@@ -1,5 +1,6 @@
 package com.example.journalapp.fragments
 
+import android.graphics.PorterDuffColorFilter
 import android.media.Image
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import com.example.journalapp.R
 import com.example.journalapp.fragments.adapters.CategoryAdapter
 import com.example.journalapp.models.AppDB
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import com.example.journalapp.fragments.adapters.ColorAdapter
 import com.example.journalapp.models.CategoryModel
 
@@ -25,6 +27,7 @@ class AddCategoryFragment : Fragment(), CategoryAdapter.OnCategoryItemClickListe
     }
 
     private var selectedIconPath: String? = null
+    private var selectedColorResId: Int = R.color.black
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -75,8 +78,7 @@ class AddCategoryFragment : Fragment(), CategoryAdapter.OnCategoryItemClickListe
         if (categoryName.isNotEmpty() && selectedIconPath != null) {
             val dbHandler: AppDB = AppDB(requireContext())
 
-            // Create a CategoryModel object
-            val newCategory = CategoryModel(name = categoryName, iconPath = selectedIconPath!!)
+            val newCategory = CategoryModel(name = categoryName, iconPath = selectedIconPath!!, colorResId = selectedColorResId)
 
             // Add the new category to the database
             val success = dbHandler.addCategory(newCategory)
@@ -88,6 +90,7 @@ class AddCategoryFragment : Fragment(), CategoryAdapter.OnCategoryItemClickListe
                 // Optionally, you can clear the entered category name and selected icon
                 categoryNameEditText?.setText("")
                 selectedIconPath = null
+                selectedColorResId = R.color.black
             } else {
                 // Failed to add category
                 Toast.makeText(requireContext(), "Failed to add category", Toast.LENGTH_SHORT).show()
@@ -111,6 +114,7 @@ class AddCategoryFragment : Fragment(), CategoryAdapter.OnCategoryItemClickListe
     }
 
     override fun onColorItemClick(colorResId: Int) {
+        selectedColorResId = colorResId
         // Handle color item click
         val editText = view?.findViewById<EditText>(R.id.editSelectCategory)
         val currentDrawable = editText?.compoundDrawables?.get(0) // assuming the icon is set at the start
@@ -147,7 +151,7 @@ class AddCategoryFragment : Fragment(), CategoryAdapter.OnCategoryItemClickListe
         val layoutManager = GridLayoutManager(requireContext(), itemsInRow)
         recyclerView.layoutManager = layoutManager
         val dbHandler: AppDB = AppDB(requireContext())
-        val records = dbHandler.viewCategories()
+        val records = dbHandler.viewCategories().filter { it.id <= 8 }
         val adapter = CategoryAdapter(records, this)
 
         recyclerView.adapter = adapter
