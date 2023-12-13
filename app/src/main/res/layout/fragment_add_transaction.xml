@@ -5,6 +5,7 @@
     android:windowSoftInputMode="adjustResize"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     tools:context=".fragments.AddTransactionFragment"
     android:id="@+id/addTransactionFragment"
     android:background="@color/white">

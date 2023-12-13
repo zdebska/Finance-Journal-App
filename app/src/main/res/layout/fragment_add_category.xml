@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:windowSoftInputMode="adjustResize"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    tools:context=".fragments.AddCategoryFragment"
+    android:id="@+id/addCategoryFragment"
+    android:background="@color/white">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleAddCategory"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:text="@string/add_cat"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginTop="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16sp"
+            android:background="@color/white"
+            android:drawablePadding="12sp"
+            />
+
+        <ImageView
+            android:id="@+id/arrowBackBtn_cat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/titleAddCategory"
+            android:layout_toStartOf="@id/titleAddCategory"
+            android:layout_alignParentStart="true"
+            app:srcCompat="@drawable/baseline_arrow_back_24"
+            android:clickable="true"
+            />
+
+        <EditText
+            android:id="@+id/editSelectCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp"
+            android:background="@color/white"
+            android:drawableStart="@drawable/baseline_other_houses_24"
+            android:drawablePadding="12sp"
+            android:hint="Enter name"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/titleSelectColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="170dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/white"
+            android:text="@string/select_color"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/ColorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/titleSelectColor">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_color"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/titleSelectIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="350dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/white"
+            android:text="@string/select_icon"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/IconContainer"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/titleSelectIcon">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="61dp"
+        android:layout_height="62dp"
+        android:background="@drawable/circle_save_transaction_btn"
+        android:orientation="horizontal"
+        android:layout_below="@id/IconContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        >
+        <Button
+            android:id="@+id/saveCategoryButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00FFFFFF"
+            />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -12,7 +12,6 @@ import android.database.Cursor
 import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-
 class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     // basis constants with names of tables and fields
@@ -62,6 +61,49 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         db!!.execSQL("DROP TABLE IF EXISTS $TABLE_TRANSACTIONS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_CATEGORIES")
         onCreate(db)
+
+    }
+// Inside the AppDB class
+
+    fun checkDefaultCategories(): Boolean {
+        val db = this.readableDatabase
+        val selectQuery = "SELECT COUNT(*) FROM $TABLE_CATEGORIES"
+
+        var cursor: Cursor? = null
+        var count = 0
+
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+            if (cursor.moveToFirst()) {
+                count = cursor.getInt(0)
+            }
+        } catch (e: SQLException) {
+            db.execSQL(selectQuery)
+            return false
+        } finally {
+            cursor?.close()
+            db.close()
+        }
+
+        // Check if the count is greater than 0, indicating that categories exist
+        return count > 0
+    }
+
+    fun insertDefaultCategories() {
+        val defaultCategories = listOf(
+            CategoryModel(1, "Food", "baseline_food_bank_24"),
+            CategoryModel(2, "Shopping", "baseline_shopping_cart_24"),
+            CategoryModel(3, "Taxes", "baseline_account_balance_24"),
+            CategoryModel(4, "Education", "baseline_school_24"),
+            CategoryModel(5, "Salary", "baseline_attach_money_24"),
+            CategoryModel(6, "Rent", "baseline_home_24"),
+            CategoryModel(7, "Relax", "baseline_sports_tennis_24"),
+            CategoryModel(8, "Other", "baseline_other_houses_24")
+        )
+
+        for (category in defaultCategories) {
+            addCategory(category)
+        }
     }
 
     // add transaction to the "transactions" table
@@ -193,8 +235,12 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     //  select transactions from the "categories" table (TODO: add condition processing)
     @SuppressLint("Range")
     fun viewCategories(): ArrayList<CategoryModel> {
+        if (!checkDefaultCategories()) {
+            insertDefaultCategories()
+        }
+
         val catList: ArrayList<CategoryModel> = ArrayList()
-        val selectQuery = "SELECT * FROM $TABLE_TRANSACTIONS"
+        val selectQuery = "SELECT * FROM $TABLE_CATEGORIES"
 
         val db = this.readableDatabase
         var cursor: Cursor? = null

@@ -126,6 +126,25 @@ class EditTransactionFragment : Fragment() {
             }
         }
 
+        categoryImg.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            val selectCategory = SelectCategoryFragment()
+
+            fragmentTransaction.add(R.id.main_container, selectCategory)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+        categoryBtn.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            val selectCategory = SelectCategoryFragment()
+
+            fragmentTransaction.add(R.id.main_container, selectCategory)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
         arrowBackBtn.setOnClickListener {
             // pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
