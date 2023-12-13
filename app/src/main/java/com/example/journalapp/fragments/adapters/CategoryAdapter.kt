@@ -1,5 +1,6 @@
 package com.example.journalapp.fragments.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +18,9 @@ class CategoryAdapter(
     private val itemClickListener: OnCategoryItemClickListener
     ) : RecyclerView.Adapter<CategoryAdapter.CustomViewHolder>() {
 
+    private lateinit var context: Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
+        context = parent.context
         val view = LayoutInflater.from(parent.context).inflate(R.layout.category_record, parent, false)
         return CustomViewHolder(view)
     }
@@ -30,38 +33,19 @@ class CategoryAdapter(
         val category = categories[position]
         holder.categoryName.text = category.name
         holder.categoryIcon.setColorFilter(ContextCompat.getColor(holder.itemView.context, category.colorResId))
+        val resourceId = getResourceId(category.iconPath)
+        holder.categoryIcon.setImageResource(resourceId)
 
-        if(category.name == "Food") {
-            holder.categoryIcon.setImageResource(R.drawable.baseline_food_bank_24)
-        }
-        else if (category.name == "Shopping") {
-            holder.categoryIcon.setImageResource(R.drawable.baseline_shopping_cart_24)
-        }
-        else if (category.name == "Education") {
-            holder.categoryIcon.setImageResource(R.drawable.baseline_school_24)
-        }
-        else if (category.name == "Taxes") {
-            holder.categoryIcon.setImageResource(R.drawable.baseline_account_balance_24)
-        }
-        else if (category.name == "Salary") {
-            holder.categoryIcon.setImageResource(R.drawable.baseline_attach_money_24)
-        }
-        else if (category.name == "Rent") {
-            holder.categoryIcon.setImageResource(R.drawable.baseline_home_24)
-        }
-        else if (category.name == "Relax") {
-            holder.categoryIcon.setImageResource(R.drawable.baseline_sports_tennis_24)
-        }
-        else {
-            holder.categoryIcon.setImageResource(R.drawable.baseline_other_houses_24)
-        }
 
 
         holder.itemView.setOnClickListener {
             itemClickListener.onCategoryItemClick(category.iconPath)
         }
     }
-
+    private fun getResourceId(iconPath: String): Int {
+        // Convert iconPath to resource ID using resources
+        return context.resources.getIdentifier(iconPath, "drawable", context.packageName)
+    }
     override fun getItemCount(): Int {
         return categories.size
     }

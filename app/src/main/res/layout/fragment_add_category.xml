@@ -49,6 +49,7 @@
             android:hint="Enter name"
             android:inputType="text"
             android:textColor="@color/black"
+            android:clickable="true"
             android:textSize="25sp" />
 
         <TextView
