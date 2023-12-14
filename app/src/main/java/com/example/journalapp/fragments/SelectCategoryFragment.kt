@@ -1,3 +1,7 @@
+/*
+* @author @author Assatulla Dias (xassat00)
+* @brief Implementation of selecting Category from available categories
+* */
 package com.example.journalapp.fragments
 
 import android.os.Bundle

@@ -1,5 +1,6 @@
 /*
 * @author Alakaev Kambulat (xalaka00)
+* @author Assatulla Dias (xassat00)
 * @brief Database implementation
 * */
 
@@ -65,8 +66,8 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         onCreate(db)
 
     }
-// Inside the AppDB class
 
+    // @author Assatulla Dias (xassat00)
     fun checkDefaultCategories(): Boolean {
         val db = this.readableDatabase
         val selectQuery = "SELECT COUNT(*) FROM $TABLE_CATEGORIES"
@@ -91,6 +92,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return count > 0
     }
 
+    // @author Assatulla Dias (xassat00)
     fun insertDefaultCategories() {
         val defaultCategories = listOf(
             CategoryModel(1, "Food", "baseline_food_bank_24", android.R.color.black),
@@ -217,6 +219,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
 
 
     // add category to the "categories" table
+    // @author Assatulla Dias (xassat00)
     fun addCategory(category: CategoryModel): Long {
         val db = this.writableDatabase
 
@@ -235,6 +238,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
+    // @author Assatulla Dias (xassat00)
     fun deleteCategory(categoryId: Int): Int {
         val db = this.writableDatabase
         val success = db.delete(TABLE_CATEGORIES, "$KEY_ID=$categoryId", null)
@@ -242,6 +246,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
+    // @author Assatulla Dias (xassat00)
     fun updateCategory(category: CategoryModel): Int {
         val db = this.writableDatabase
         val contentValues = ContentValues()
@@ -258,7 +263,8 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
-    //  select transactions from the "categories" table (TODO: add condition processing)
+    //  select transactions from the "categories" table
+    // @author Assatulla Dias (xassat00)
     @SuppressLint("Range")
     fun viewCategories(): ArrayList<CategoryModel> {
         if (!checkDefaultCategories()) {
@@ -302,6 +308,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
 
 
     // get the id of category by its name
+    // @author Assatulla Dias (xassat00)
     @SuppressLint("Range")
     fun getCategoryId(catName: String): Int {
         val selectQuery = "SELECT * FROM $TABLE_CATEGORIES WHERE name = '$catName'"

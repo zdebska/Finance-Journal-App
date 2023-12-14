@@ -1,5 +1,5 @@
 /*
-* @author Alakaev Kambulat (xalaka00)
+* @author Assatulla Dias (xassat00)
 * @brief Structure to store records from the "categories" table
 * */
 package com.example.journalapp.models

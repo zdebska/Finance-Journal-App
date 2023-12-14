@@ -1,3 +1,7 @@
+/*
+* @author @author Assatulla Dias (xassat00)
+* @brief Implementation of Add category Fragment
+* */
 package com.example.journalapp.fragments
 
 import android.content.res.ColorStateList

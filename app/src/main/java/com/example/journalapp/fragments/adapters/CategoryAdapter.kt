@@ -1,3 +1,7 @@
+/*
+* @author @author Assatulla Dias (xassat00)
+* @brief implementation of Category Adapter
+* */
 package com.example.journalapp.fragments.adapters
 
 import android.content.Context

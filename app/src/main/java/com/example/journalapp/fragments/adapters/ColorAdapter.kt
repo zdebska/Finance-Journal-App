@@ -1,3 +1,7 @@
+/*
+* @author @author Assatulla Dias (xassat00)
+* @brief Implementation of Color Adapter
+* */
 package com.example.journalapp.fragments.adapters
 
 import android.view.LayoutInflater

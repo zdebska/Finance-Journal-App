@@ -1,3 +1,7 @@
+/*
+* @author @author Assatulla Dias (xassat00)
+* @brief Implementation of Edit Category Fragment
+* */
 package com.example.journalapp.fragments
 
 import android.os.Bundle

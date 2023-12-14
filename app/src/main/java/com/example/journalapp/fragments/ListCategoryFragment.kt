@@ -1,3 +1,7 @@
+/*
+* @author @author Assatulla Dias (xassat00)
+* @brief Implementation of showing List of Categories that user created
+* */
 package com.example.journalapp.fragments
 
 import android.content.Context
