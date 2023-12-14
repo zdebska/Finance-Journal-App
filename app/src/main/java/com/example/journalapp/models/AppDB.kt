@@ -235,6 +235,29 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
+    fun deleteCategory(categoryId: Int): Int {
+        val db = this.writableDatabase
+        val success = db.delete(TABLE_CATEGORIES, "$KEY_ID=$categoryId", null)
+        db.close()
+        return success
+    }
+
+    fun updateCategory(category: CategoryModel): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+
+        contentValues.put(KEY_NAME, category.name)
+        contentValues.put(KEY_ICON, category.iconPath)
+        contentValues.put(KEY_COLOR, category.colorResId)
+
+        val success = db.update(
+            TABLE_CATEGORIES, contentValues,
+            "$KEY_ID=${category.id}", null
+        )
+        db.close()
+        return success
+    }
+
     //  select transactions from the "categories" table (TODO: add condition processing)
     @SuppressLint("Range")
     fun viewCategories(): ArrayList<CategoryModel> {

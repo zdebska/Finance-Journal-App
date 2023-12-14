@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.EditFragmentCategory"
+    android:clickable="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleEditCategory"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:text="@string/edit_cat"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginTop="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16sp"
+            android:background="@color/white"
+            android:drawablePadding="12sp"
+            />
+
+        <ImageView
+            android:id="@+id/arrowBackBtn_cat_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/titleEditCategory"
+            android:layout_toStartOf="@id/titleEditCategory"
+            android:layout_alignParentStart="true"
+            app:srcCompat="@drawable/baseline_arrow_back_24"
+            android:clickable="true"
+            />
+
+        <EditText
+            android:id="@+id/editSelectCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="90dp"
+            android:background="@color/white"
+            android:drawableStart="@drawable/baseline_other_houses_24"
+            android:drawablePadding="12sp"
+            android:hint="Enter name"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:clickable="true"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/titleSelectColor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="170dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/white"
+            android:text="@string/select_color"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/ColorContainer"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/titleSelectColor">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_color"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/titleSelectIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="350dp"
+            android:layout_marginLeft="20dp"
+            android:background="@color/white"
+            android:text="@string/select_icon"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:id="@+id/IconContainer"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/titleSelectIcon">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="61dp"
+            android:layout_height="62dp"
+            android:layout_below="@id/IconContainer"
+            android:layout_alignStart="@id/IconContainer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/circle_save_transaction_btn"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/saveCategoryButton_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="61dp"
+            android:layout_height="62dp"
+            android:layout_below="@id/IconContainer"
+            android:layout_alignEnd="@id/IconContainer"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"
+            android:background="@drawable/baseline_delete_outline_24"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/deleteCategoryButton_edit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

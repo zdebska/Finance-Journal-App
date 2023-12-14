@@ -9,11 +9,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="340sp"
+        android:layout_height="400sp"
         android:layout_gravity="bottom"
         android:background="@color/white">
-
-
 
         <TextView
             android:id="@+id/selectCatTextView"
@@ -55,7 +53,35 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_marginRight="50dp"
+            android:clickable="true"
             android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/editCatTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_cat"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="50dp"
+            android:clickable="true"
+            android:layout_marginBottom="70dp"
+            android:layout_marginLeft="50dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/editCatButton"
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="60dp"
+            android:background="@drawable/baseline_edit_24"
+            android:textColor="@color/black"
+            android:textSize="33sp">
+
+        </androidx.appcompat.widget.AppCompatButton>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/addCatButton"

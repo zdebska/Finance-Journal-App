@@ -26,7 +26,7 @@ class CategoryAdapter(
     }
 
     interface OnCategoryItemClickListener {
-        fun onCategoryItemClick(iconPath: String)
+        fun onCategoryItemClick(category: CategoryModel)
     }
 
     override fun onBindViewHolder(holder: CustomViewHolder, position: Int) {
@@ -39,7 +39,7 @@ class CategoryAdapter(
 
 
         holder.itemView.setOnClickListener {
-            itemClickListener.onCategoryItemClick(category.iconPath)
+            itemClickListener.onCategoryItemClick(category)
         }
     }
     private fun getResourceId(iconPath: String): Int {
@@ -53,5 +53,11 @@ class CategoryAdapter(
     inner class CustomViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val categoryName: TextView = itemView.findViewById(R.id.catNoteText)
         val categoryIcon: ImageView = itemView.findViewById(R.id.catTypeIcon)
+
+        fun bind(category: CategoryModel, clickListener: OnCategoryItemClickListener) {
+            itemView.setOnClickListener {
+                clickListener.onCategoryItemClick(category)
+            }
+        }
     }
 }

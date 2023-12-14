@@ -7,6 +7,7 @@
     <string name="select_color">Select Color</string>
     <string name="select_icon">Select Icon</string>
     <string name="add_cat">Add Category</string>
+    <string name="edit_cat">Edit Category</string>
     <string name="balance_text">Balance: </string>
     <string name="this_month">This month</string>
     <string name="last_transactions">Last transactions</string>

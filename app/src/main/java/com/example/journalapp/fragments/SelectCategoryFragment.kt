@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,6 +13,7 @@ import com.example.journalapp.R
 import com.example.journalapp.fragments.adapters.CategoryAdapter
 import com.example.journalapp.fragments.adapters.RecordAdapter
 import com.example.journalapp.models.AppDB
+import com.example.journalapp.models.CategoryModel
 
 class SelectCategoryFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,8 +27,40 @@ class SelectCategoryFragment : Fragment() {
 
         val closeButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.closeCatButton)
         val addButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.addCatButton)
+        val textAddButton = view.findViewById<TextView>(R.id.addCatTextView)
+        val editButton = view.findViewById<androidx.appcompat.widget.AppCompatButton>(R.id.editCatButton)
+        val textEditButton = view.findViewById<TextView>(R.id.editCatTextView)
+
+        editButton.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            val editCategory = ListCategoryFragment()
+
+            fragmentTransaction.add(R.id.main_container, editCategory)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
+        textEditButton.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            val editCategory = ListCategoryFragment()
+
+            fragmentTransaction.add(R.id.main_container, editCategory)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
 
 
+        textAddButton.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            val addCategory = AddCategoryFragment()
+
+            fragmentTransaction.add(R.id.main_container, addCategory)
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
+        }
         addButton.setOnClickListener {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
@@ -54,7 +88,7 @@ class SelectCategoryFragment : Fragment() {
         val dbHandler: AppDB = AppDB(requireContext())
         val records = dbHandler.viewCategories()
         val adapter = CategoryAdapter(records, object : CategoryAdapter.OnCategoryItemClickListener {
-            override fun onCategoryItemClick(iconPath: String) {
+            override fun onCategoryItemClick(category: CategoryModel) {
                 // Handle item click if needed
             }
         })

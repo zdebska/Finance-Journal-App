@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ListCategoryFragment"
+    android:background="@color/white"
+    android:clickable="true">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/titleListCategory"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:text="@string/select_cat"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginTop="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16sp"
+            android:background="@color/white"
+            android:drawablePadding="12sp"
+            />
+
+        <ImageView
+            android:id="@+id/arrowBackBtn_cat_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/titleListCategory"
+            android:layout_toStartOf="@id/titleListCategory"
+            android:layout_alignParentStart="true"
+            app:srcCompat="@drawable/baseline_arrow_back_24"
+            android:clickable="true"
+            />
+
+        <LinearLayout
+            android:id="@+id/IconContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/titleListCategory">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_centerHorizontal="true"
+                android:orientation="vertical" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</FrameLayout>
