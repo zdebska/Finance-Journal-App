@@ -105,6 +105,7 @@ class AddCategoryFragment : Fragment(), CategoryAdapter.OnCategoryItemClickListe
     }
 
     override fun onColorItemClick(colorResId: Int) {
+        selectedColorResId = colorResId
         val editText = view?.findViewById<EditText>(R.id.editSelectCategory)
         val currentDrawable = editText?.compoundDrawables?.get(0)
         if (currentDrawable != null) {

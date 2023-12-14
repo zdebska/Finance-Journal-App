@@ -154,14 +154,11 @@ class EditFragmentCategory : Fragment(), CategoryAdapter.OnCategoryItemClickList
 
     override fun onColorItemClick(colorResId: Int) {
         selectedColorResId = colorResId
-        // Handle color item click
         val editText = view?.findViewById<EditText>(R.id.editSelectCategory)
         val currentDrawable = editText?.compoundDrawables?.get(0)
         if (currentDrawable != null) {
             val newDrawable = currentDrawable.constantState?.newDrawable()?.mutate()
             newDrawable?.setTint(ContextCompat.getColor(requireContext(), colorResId))
-
-            // Set the new drawable with tint to the EditText
             editText.setCompoundDrawablesWithIntrinsicBounds(newDrawable, null, null, null)
         }
     }
