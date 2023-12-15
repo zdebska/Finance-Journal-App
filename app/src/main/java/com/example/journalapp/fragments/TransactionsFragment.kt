@@ -83,7 +83,6 @@ class TransactionsFragment : Fragment() {
     private fun showTransactions(view: View, condition: String) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewTransactions)
         val layoutManager = LinearLayoutManager(requireContext())
-        // TODO: check where it takes a lot of time to give a control to the db
         recyclerView.layoutManager = layoutManager
         val dbHandler: AppDB = AppDB(requireContext())
         val records = dbHandler.viewTransactions(condition)

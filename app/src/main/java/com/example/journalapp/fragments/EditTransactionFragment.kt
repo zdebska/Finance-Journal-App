@@ -1,11 +1,17 @@
+/*
+* @author Alakaev Kambulat (xalaka00)
+* @brief Page of transaction edition/deletion
+* */
 package com.example.journalapp.fragments
 
+import SharedViewModel
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -20,11 +26,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.journalapp.R
 import com.example.journalapp.models.AppDB
+import com.example.journalapp.models.CategoryModel
 import com.example.journalapp.models.TransactionModel
 import java.util.Calendar
 
 class EditTransactionFragment : Fragment() {
-
+    private val sharedViewModel: SharedViewModel by lazy {
+        SharedViewModel.getInstance(requireActivity().application)
+    }
+    private var category : CategoryModel? = null;
+    private var categoryBtn: Button? = null
     companion object {
         private const val ARG_DATA = "data"
 
@@ -47,7 +58,11 @@ class EditTransactionFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_edit_transaction, container, false)
 
+
         val record: TransactionModel? = arguments?.getParcelable(ARG_DATA)
+
+        val dbHandler: AppDB = AppDB(requireContext())
+        category = dbHandler.viewCategories().filter { it.id == record!!.category }[0]
 
 
         val expBtn = view.findViewById<Button>(R.id.selectExpTransactions_e)
@@ -64,7 +79,10 @@ class EditTransactionFragment : Fragment() {
         val amountBtn = view.findViewById<EditText>(R.id.SelectAmountBtn_e)
         val amountImg = view.findViewById<ImageView>(R.id.SelectAmountImg)
 
-        val categoryBtn = view.findViewById<Button>(R.id.SelectCategoryBtn)
+        categoryBtn = view.findViewById<Button>(R.id.SelectCategoryBtn)
+
+        categoryBtn!!.text = category!!.name
+
         val categoryImg = view.findViewById<ImageView>(R.id.SelectCategoryImg)
 
         val noteBtn = view.findViewById<EditText>(R.id.SelectNoteBtn)
@@ -76,12 +94,9 @@ class EditTransactionFragment : Fragment() {
         // Get the current date
         val calendar = Calendar.getInstance()
 
-
         dateBtn.text = record?.creationDate
         amountBtn.setText(record?.amount.toString())
         noteBtn.setText(record?.note)
-
-        //TODO: add category reading from a record
 
         // set colors of the transaction type buttons depending on the record transaction type
         if (record?.transType == "Expense") {
@@ -114,7 +129,7 @@ class EditTransactionFragment : Fragment() {
 
         // update edited transaction and save to DB
         saveBtn.setOnClickListener() {
-            val status = editRecord(view, dateBtn, amountBtn, categoryBtn, noteBtn, record)
+            val status = editRecord(view, dateBtn, amountBtn, categoryBtn!!, noteBtn, record)
             if (status == 1) {
                 requireActivity().supportFragmentManager.popBackStack()
             }
@@ -131,16 +146,16 @@ class EditTransactionFragment : Fragment() {
             val fragmentTransaction = fragmentManager.beginTransaction()
             val selectCategory = SelectCategoryFragment()
 
-            fragmentTransaction.add(R.id.main_container, selectCategory)
+            fragmentTransaction.replace(R.id.main_container, selectCategory)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
-        categoryBtn.setOnClickListener {
+        categoryBtn!!.setOnClickListener {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             val selectCategory = SelectCategoryFragment()
 
-            fragmentTransaction.add(R.id.main_container, selectCategory)
+            fragmentTransaction.replace(R.id.main_container, selectCategory)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
@@ -149,7 +164,17 @@ class EditTransactionFragment : Fragment() {
             // pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
+
         return view
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onResume() {
+        super.onResume()
+        if (category != null) {
+            category = sharedViewModel.selectedCategory
+            categoryBtn!!.text = category!!.name
+        }
     }
 
     // set date selector to be shown on date button click
@@ -175,6 +200,9 @@ class EditTransactionFragment : Fragment() {
     }
 
     private fun setTextVal(Btn: EditText, Img: ImageView) {
+        if (Btn.id == R.id.SelectAmountBtn) {
+            Btn.inputType = InputType.TYPE_CLASS_NUMBER
+        }
         for (i in listOf(Btn, Img)) {
             i.setOnClickListener() {
                 // open keyboard
@@ -225,9 +253,8 @@ class EditTransactionFragment : Fragment() {
 
         val dbHandler: AppDB = AppDB(requireContext())
 
-        val recCategory = dbHandler.getCategoryId(catName)
-
-        if (recAmount.isNotEmpty()) { // && catName != "None"
+        if (recAmount.isNotEmpty() && catName != "None") {
+            val recCategory = dbHandler.getCategoryId(catName)
             val editedRecord = TransactionModel(
                 0, recAmount.toFloat(), recNote, recDate,
                 recCategory, recTransType

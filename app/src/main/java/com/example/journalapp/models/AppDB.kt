@@ -323,7 +323,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         }
 
         if (cursor.moveToFirst()) {
-            return cursor.getInt(cursor.getColumnIndex(KEY_NAME))
+            return cursor.getInt(cursor.getColumnIndex(KEY_ID))
         }
         cursor.close()
         db.close()

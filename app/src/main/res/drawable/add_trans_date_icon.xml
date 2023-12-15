@@ -1,3 +1,7 @@
+<!--
+ @author Kambulat Alakaev (xalaka00)
+ @brief Icon for date field in add/edit transaction
+ -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="21dp"
     android:height="22dp"

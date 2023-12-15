@@ -1,5 +1,6 @@
 /*
 * @author Assatulla Dias (xassat00)
+* @author Alakaev Kambulat (xalaka00)
 * @brief Home Fragment implementation
 * */
 
@@ -86,6 +87,8 @@ class HomeFragment : Fragment() {
         return view
     }
 
+    // show last transactions on the main page
+    // @author Alakaev Kambulat (xalaka00)
     private fun showLastTransactions(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         val layoutManager = LinearLayoutManager(requireContext())

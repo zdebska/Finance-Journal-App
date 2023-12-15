@@ -4,12 +4,14 @@
 * */
 package com.example.journalapp.fragments
 
+import SharedViewModel
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.text.InputType
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.journalapp.R
 import com.example.journalapp.models.AppDB
+import com.example.journalapp.models.CategoryModel
 import com.example.journalapp.models.TransactionModel
 import java.util.Calendar
 import java.util.Date
@@ -32,6 +35,12 @@ import java.util.Locale
 
 
 class AddTransactionFragment : Fragment() {
+    private val sharedViewModel: SharedViewModel by lazy {
+        SharedViewModel.getInstance(requireActivity().application)
+    }
+
+    private var category : CategoryModel? = null;
+    private var categoryBtn: Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -42,6 +51,8 @@ class AddTransactionFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_add_transaction, container, false)
+
+        category = sharedViewModel.selectedCategory
 
         val expBtn = view.findViewById<Button>(R.id.selectExpTransactions)
         val incBtn = view.findViewById<Button>(R.id.selectIncTransactions)
@@ -60,7 +71,7 @@ class AddTransactionFragment : Fragment() {
         val amountBtn = view.findViewById<EditText>(R.id.SelectAmountBtn)
         val amountImg = view.findViewById<ImageView>(R.id.SelectAmountImg)
 
-        val categoryBtn = view.findViewById<Button>(R.id.SelectCategoryBtn)
+        categoryBtn = view.findViewById<Button>(R.id.SelectCategoryBtn)
         val categoryImg = view.findViewById<ImageView>(R.id.SelectCategoryImg)
 
         val noteBtn = view.findViewById<EditText>(R.id.SelectNoteBtn)
@@ -94,7 +105,7 @@ class AddTransactionFragment : Fragment() {
 
         // save transaction to DB
         saveBtn.setOnClickListener() {
-            val status = addRecord(view, dateBtn, amountBtn, categoryBtn, noteBtn)
+            val status = addRecord(view, dateBtn, amountBtn, categoryBtn!!, noteBtn)
             if (status == 1) {
                 requireActivity().supportFragmentManager.popBackStack()
             }
@@ -104,17 +115,17 @@ class AddTransactionFragment : Fragment() {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             val selectCategory = SelectCategoryFragment()
-
-            fragmentTransaction.add(R.id.main_container, selectCategory)
+            fragmentTransaction.replace(R.id.main_container, selectCategory)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
+
         }
-        categoryBtn.setOnClickListener {
+        categoryBtn!!.setOnClickListener {
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             val selectCategory = SelectCategoryFragment()
 
-            fragmentTransaction.add(R.id.main_container, selectCategory)
+            fragmentTransaction.replace(R.id.main_container, selectCategory)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
         }
@@ -123,6 +134,7 @@ class AddTransactionFragment : Fragment() {
             // pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
+        category = sharedViewModel.selectedCategory
         return view
     }
 
@@ -157,7 +169,22 @@ class AddTransactionFragment : Fragment() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
+    override fun onResume() {
+        super.onResume()
+        category = sharedViewModel.selectedCategory
+        if (category != null) {
+            categoryBtn!!.text = category!!.name
+        }
+        else{
+            categoryBtn!!.text = "None"
+        }
+    }
+
     private fun setTextVal(Btn: EditText, Img: ImageView) {
+        if (Btn.id == R.id.SelectAmountBtn) {
+            Btn.inputType = InputType.TYPE_CLASS_NUMBER
+        }
         for (i in listOf(Btn, Img)) {
             i.setOnClickListener() {
                 // open keyboard
@@ -185,11 +212,13 @@ class AddTransactionFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun addRecord(view: View, dateBtn: Button, amountBtn: EditText, categoryBtn: Button,
-        noteBtn: EditText): Int
-    {
+    private fun addRecord(
+        view: View, dateBtn: Button, amountBtn: EditText, categoryBtn: Button,
+        noteBtn: EditText
+    ): Int {
         val expBtn = view.findViewById<Button>(R.id.selectExpTransactions)
-        val whiteClr = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
+        val whiteClr =
+            ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white))
 
         val recTransType: String =
             if (expBtn.backgroundTintList == whiteClr) {
@@ -204,12 +233,13 @@ class AddTransactionFragment : Fragment() {
         val recNote = noteBtn.text.toString()
 
         val dbHandler: AppDB = AppDB(requireContext())
-        val recCategory = dbHandler.getCategoryId(catName)
 
-
-        if (recAmount.isNotEmpty()) { // && catName != "None"
-            val newRecord = TransactionModel(0, recAmount.toFloat(), recNote, recDate,
-                recCategory, recTransType)
+        if (recAmount.isNotEmpty() && catName != "None") {
+            val recCategory = dbHandler.getCategoryId(catName)
+            val newRecord = TransactionModel(
+                0, recAmount.toFloat(), recNote, recDate,
+                recCategory, recTransType
+            )
             val status = dbHandler.addTransaction(newRecord)
 
             if (status > -1) {

@@ -1,3 +1,7 @@
+<!--
+ @author Kambulat Alakaev (xalaka00)
+ @brief Icon for note field in add/edit transaction
+ -->
 <vector android:height="24dp" android:tint="#000000"
     android:viewportHeight="24" android:viewportWidth="24"
     android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">

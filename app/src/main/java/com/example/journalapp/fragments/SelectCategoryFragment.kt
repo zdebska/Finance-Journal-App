@@ -4,7 +4,9 @@
 * */
 package com.example.journalapp.fragments
 
+import SharedViewModel
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +22,9 @@ import com.example.journalapp.models.AppDB
 import com.example.journalapp.models.CategoryModel
 
 class SelectCategoryFragment : Fragment() {
+    private val sharedViewModel: SharedViewModel by lazy {
+        SharedViewModel.getInstance(requireActivity().application)
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -93,7 +98,8 @@ class SelectCategoryFragment : Fragment() {
         val records = dbHandler.viewCategories()
         val adapter = CategoryAdapter(records, object : CategoryAdapter.OnCategoryItemClickListener {
             override fun onCategoryItemClick(category: CategoryModel) {
-                // Handle item click if needed
+                sharedViewModel.selectedCategory = category
+                requireActivity().supportFragmentManager.popBackStack()
             }
         })
         recyclerView.adapter = adapter
