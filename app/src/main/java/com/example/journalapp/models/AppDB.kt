@@ -18,7 +18,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     // basis constants with names of tables and fields
     companion object {
         const val DATABASE_NAME = "FinanceJournalDatabase.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
         const val TABLE_TRANSACTIONS = "transactions"
         const val TABLE_CATEGORIES = "categories"
         const val TABLE_GOALS = "goals"

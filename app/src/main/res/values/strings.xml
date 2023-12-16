@@ -33,4 +33,5 @@
     <string name="addGoal">Add goal</string>
     <string name="name_background">Write a name</string>
     <string name="deadline">Deadline</string>
+    <string name="addSaving">Add saving</string>
 </resources>

@@ -35,22 +35,12 @@ class HomeFragment : Fragment() {
 
         val mainActivity = requireActivity() as MainActivity
         val textSeeAll = view.findViewById<TextView>(R.id.textSeeAll)
-        val textIncome = view.findViewById<TextView>(R.id.textIncome)
-        val textExpense = view.findViewById<TextView>(R.id.textExpence)
         val textBalance = view.findViewById<TextView>(R.id.textBalance)
         val addButton = mainActivity.findViewById<Button>(R.id.addButton)
 
 
         textSeeAll.setOnClickListener {
             mainActivity.changeTab(1)
-        }
-
-        textIncome.setOnClickListener {
-            mainActivity.changeTab(2)
-        }
-
-        textExpense.setOnClickListener {
-            mainActivity.changeTab(2)
         }
 
         addButton.setOnClickListener() {
