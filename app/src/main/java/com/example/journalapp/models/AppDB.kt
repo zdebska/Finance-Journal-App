@@ -1,6 +1,7 @@
 /*
 * @author Alakaev Kambulat (xalaka00)
 * @author Assatulla Dias (xassat00)
+* @author Zdebska Kateryna (xzdebs00)
 * @brief Database implementation
 * */
 
@@ -135,6 +136,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         }
     }
 
+    // @author: Alakaev Kambulat (xalaka00)
     // add transaction to the "transactions" table
     fun addTransaction(transaction: TransactionModel): Long {
         // set database op mode to write
@@ -193,7 +195,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
-
+    // @author: Alakaev Kambulat (xalaka00)
     // update existing transaction
     fun updateTransaction(transaction: TransactionModel, transID: Int): Int {
         val db = this.writableDatabase
@@ -213,6 +215,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
+    // @author: Alakaev Kambulat (xalaka00)
     // delete existing transaction
     fun deleteTransaction(transID: Int): Int {
         val db = this.writableDatabase
@@ -222,6 +225,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return success
     }
 
+    // @author: Alakaev Kambulat (xalaka00)
     // select transactions from the "transactions" table depending on a condition(if there is one)
     @SuppressLint("Range")
     fun viewTransactions(condition: String): ArrayList<TransactionModel> {
