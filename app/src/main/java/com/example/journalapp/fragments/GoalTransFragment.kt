@@ -11,12 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.journalapp.R
+import com.example.journalapp.fragments.adapters.GoalsAdapter
 import com.example.journalapp.fragments.adapters.RecordAdapter
+import com.example.journalapp.fragments.adapters.TransGoalAdapter
 import com.example.journalapp.models.AppDB
 import com.example.journalapp.models.GoalModel
 import com.example.journalapp.models.TransactionModel
@@ -53,6 +56,15 @@ class GoalTransFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         view = inflater.inflate(R.layout.fragment_goal_trans, container, false)
+        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutGoal)
+        val record: GoalModel? = arguments?.getParcelable(GoalTransFragment.ARG_DATA)
+        swipeRefreshLayout.setOnRefreshListener {
+
+//            showGoal(record)
+            showGoalTrans(view)
+            // Signal that the refresh has finished
+            swipeRefreshLayout.isRefreshing = false
+        }
         return view
     }
 
@@ -62,6 +74,7 @@ class GoalTransFragment : Fragment() {
         showGoal(record)
         sharedViewModel.selectedGoal.observe(viewLifecycleOwner) { goal ->
             showGoal(goal)
+            showGoalTrans(view)
         }
     }
 
@@ -77,15 +90,26 @@ class GoalTransFragment : Fragment() {
         val arrowBackBtn = view.findViewById<ImageView>(R.id.arrowBackBtn)
         val deleteBtn = view.findViewById<ImageView>(R.id.deleteBtn)
         val editBtn = view.findViewById<ImageView>(R.id.editBtn)
+        val addTrans = view.findViewById<Button>(R.id.buttonAddGoalTransaction)
+        val addTransText = view.findViewById<TextView>(R.id.textAddGoalTransaction)
 
         // Set the goal name to the Button or TextView as needed
         nameGoal.text = record!!.name.toString()
         amountGoal.text = record!!.amount.toString() + " $"
         endDateGoal.text = record!!.endDate
 
-
-        val goalTransactions = dbHandler.viewGoalsTransactions(record!!.id)
-        savedAmountGoal.text = goalTransactions.sumOf { it.amount.toDouble() }.toFloat().toString()
+        val saved = dbHandler.calculateSavedAmountForGoal(record!!.id)
+        savedAmountGoal.text = saved.toString() + " $"
+        if ((100 * saved / record.amount).toInt() >= 100) {
+            addTrans.visibility = View.GONE
+            addTrans.isClickable = false
+            addTransText.visibility = View.VISIBLE
+        }
+        else {
+            addTrans.visibility = View.VISIBLE
+            addTrans.isClickable = true
+            addTransText.visibility = View.GONE
+        }
 
         val dateFormat =
             SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // Adjust the pattern accordingly
@@ -127,19 +151,30 @@ class GoalTransFragment : Fragment() {
             )
             transaction.addToBackStack(null)
             transaction.commit()
-
-
+        }
+        addTrans.setOnClickListener {
+            sharedViewModel.selectGoal(record)
+            val fragment = AddGoalTransFragment.newInstance(record)
+            val fragmentManager = (requireActivity() as AppCompatActivity).supportFragmentManager
+            val transaction = fragmentManager.beginTransaction()
+            transaction.replace(
+                R.id.main_container,
+                fragment,
+                AddGoalTransFragment::class.java.simpleName
+            )
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
     }
 
     private fun showGoalTrans(view: View) {
-//        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewTransactions)
-//        val layoutManager = LinearLayoutManager(requireContext())
-//        recyclerView.layoutManager = layoutManager
-//        val dbHandler: AppDB = AppDB(requireContext())
-//        val records = dbHandler.viewTransactions()
-//        val adapter = RecordAdapter(records)
-//        recyclerView.adapter = adapter
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewGoalTrans)
+        val layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.layoutManager = layoutManager
+        val dbHandler: AppDB = AppDB(requireContext())
+        val record: GoalModel? = arguments?.getParcelable(GoalTransFragment.ARG_DATA)
+        val records = dbHandler.viewGoalsTransactions(record!!.id)
+        val adapter = TransGoalAdapter(record, records, sharedViewModel)
+        recyclerView.adapter = adapter
     }
-
 }

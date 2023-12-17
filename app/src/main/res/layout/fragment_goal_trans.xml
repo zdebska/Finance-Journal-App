@@ -180,7 +180,7 @@
             <LinearLayout
                 android:id="@+id/GoalTransContainer"
                 android:layout_width="380dp"
-                android:layout_height="500dp"
+                android:layout_height="450dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below = "@id/addGoalButton"
                 android:layout_marginTop="10dp"
@@ -218,5 +218,22 @@
         android:text="@string/addSaving"
         android:textColor="#e0e0e0"
         android:textSize="16sp" />
+    <TextView
+        android:id="@+id/textAddGoalTransaction"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/GoalTransContainer"
+        android:layout_marginTop="640dp"
+        android:layout_marginLeft="140dp"
+        android:background="@drawable/rectangle_round_color_green"
+        android:drawablePadding="10sp"
+        android:text="@string/reached"
+        android:padding="8sp"
+        android:textColor="#e0e0e0"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:clickable="true"
+        android:visibility="invisible"
+        />
 
 </FrameLayout>
