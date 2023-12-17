@@ -141,4 +141,20 @@
         android:gravity="center"
         android:clickable="true"
         />
+    <TextView
+        android:id="@+id/textAddGoalTransaction"
+        android:layout_width="85dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle_round_color_green"
+        android:drawablePadding="12sp"
+        android:text="@string/reached"
+        android:padding="8sp"
+        android:layout_marginStart="9sp"
+        android:layout_marginTop="42sp"
+        android:textColor="#e0e0e0"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:clickable="true"
+        android:visibility="invisible"
+        />
 </LinearLayout>

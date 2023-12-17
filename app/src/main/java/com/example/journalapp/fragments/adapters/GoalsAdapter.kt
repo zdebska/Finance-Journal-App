@@ -1,29 +1,28 @@
 package com.example.journalapp.fragments.adapters
 
-import android.annotation.SuppressLint
+import SharedViewModel
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.journalapp.R
-import com.example.journalapp.fragments.EditTransactionFragment
+import com.example.journalapp.fragments.AddGoalTransFragment
 import com.example.journalapp.fragments.GoalTransFragment
 import com.example.journalapp.models.AppDB
 import com.example.journalapp.models.GoalModel
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class GoalsAdapter(private val goals: List<GoalModel>) : RecyclerView.Adapter<GoalsAdapter.GoalViewHolder>() {
+class GoalsAdapter(private val goals: List<GoalModel>, private val sharedViewModel: SharedViewModel) : RecyclerView.Adapter<GoalsAdapter.GoalViewHolder>() {
+
     private lateinit var context: Context
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoalViewHolder {
         context = parent.context
@@ -50,15 +49,38 @@ class GoalsAdapter(private val goals: List<GoalModel>) : RecyclerView.Adapter<Go
         val currentDateWithoutTime = Date(calendar.timeInMillis)
         if ((goal.isReached == 0) and (currentDateWithoutTime > endDate)){
             holder.goalEndDateText.setTextColor(Color.RED) // Set text color to red
-            //holder.textAddGoalTransaction.visibility = View.GONE
         }
         val dbHandler: AppDB = AppDB(context)
         val saved = dbHandler.calculateSavedAmountForGoal(goal.id)
-        holder.goalSavedText.text = saved.toString()
-        holder.progressBar.progress = (100 * saved / goal.amount).toInt()
-        holder.goalPercentText.text = (100 * saved / goal.amount).toInt().toString()+ "%"
+        holder.goalSavedText.text = saved.toString() + " $"
+        if ((100 * saved / goal.amount).toInt() >= 100) {
+            holder.buttonAddGoalTransaction.visibility = View.GONE
+            holder.buttonAddGoalTransaction.isClickable = false
+            holder.textAddGoalTransaction.visibility = View.VISIBLE
+        }
+        if ((100 * saved / goal.amount).toInt() > 100){
+            holder.progressBar.progress = 100
+            holder.goalPercentText.text = ">100%"
+
+        }
+        else{
+            holder.progressBar.progress = (100 * saved / goal.amount).toInt()
+            holder.goalPercentText.text = (100 * saved / goal.amount).toInt().toString()+ "%"
+        }
+
+
         holder.itemView.setOnClickListener {
+            sharedViewModel.selectGoal(goal)
             val fragment = GoalTransFragment.newInstance(goal)
+            val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
+            val transaction = fragmentManager.beginTransaction()
+            transaction.replace(R.id.main_container, fragment, GoalTransFragment::class.java.simpleName)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+        holder.buttonAddGoalTransaction.setOnClickListener {
+            sharedViewModel.selectGoal(goal)
+            val fragment = AddGoalTransFragment.newInstance(goal)
             val fragmentManager = (holder.itemView.context as AppCompatActivity).supportFragmentManager
             val transaction = fragmentManager.beginTransaction()
             transaction.replace(R.id.main_container, fragment, GoalTransFragment::class.java.simpleName)
@@ -78,7 +100,8 @@ class GoalsAdapter(private val goals: List<GoalModel>) : RecyclerView.Adapter<Go
         val goalSavedText: TextView = itemView.findViewById(R.id.goalSavedAmountText)
         val progressBar: ProgressBar = itemView.findViewById(R.id.my_progressBar)
         val goalPercentText: TextView = itemView.findViewById(R.id.goalPercentText)
-        //val textAddGoalTransaction: TextView = itemView.findViewById(R.id.textAddGoalTransaction)
+        val buttonAddGoalTransaction: Button = itemView.findViewById(R.id.buttonAddGoalTransaction)
+        val textAddGoalTransaction: TextView = itemView.findViewById(R.id.textAddGoalTransaction)
     }
 
 

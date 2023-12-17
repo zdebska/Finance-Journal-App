@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -51,15 +52,21 @@ class GoalTransFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-        view =  inflater.inflate(R.layout.fragment_goal_trans, container, false)
-
+        view = inflater.inflate(R.layout.fragment_goal_trans, container, false)
         return view
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         val record: GoalModel? = arguments?.getParcelable(GoalTransFragment.ARG_DATA)
+        showGoal(record)
+        sharedViewModel.selectedGoal.observe(viewLifecycleOwner) { goal ->
+            showGoal(goal)
+        }
+    }
+
+
+    private fun showGoal(record: GoalModel?) {
 
         val dbHandler: AppDB = AppDB(requireContext())
 
@@ -69,6 +76,7 @@ class GoalTransFragment : Fragment() {
         val endDateGoal = view.findViewById<MaterialTextView>(R.id.goalEndDateText)
         val arrowBackBtn = view.findViewById<ImageView>(R.id.arrowBackBtn)
         val deleteBtn = view.findViewById<ImageView>(R.id.deleteBtn)
+        val editBtn = view.findViewById<ImageView>(R.id.editBtn)
 
         // Set the goal name to the Button or TextView as needed
         nameGoal.text = record!!.name.toString()
@@ -76,10 +84,11 @@ class GoalTransFragment : Fragment() {
         endDateGoal.text = record!!.endDate
 
 
-        val goalTransactions = dbHandler.viewGoalsTransactions(id)
+        val goalTransactions = dbHandler.viewGoalsTransactions(record!!.id)
         savedAmountGoal.text = goalTransactions.sumOf { it.amount.toDouble() }.toFloat().toString()
 
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // Adjust the pattern accordingly
+        val dateFormat =
+            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // Adjust the pattern accordingly
         val endDate = dateFormat.parse(record.endDate)
 
         // Check if today's date is before the deadline
@@ -90,12 +99,13 @@ class GoalTransFragment : Fragment() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         val currentDateWithoutTime = Date(calendar.timeInMillis)
-        if ((record!!.isReached == 0) and (currentDateWithoutTime > endDate)){
+        if ((record!!.isReached == 0) and (currentDateWithoutTime > endDate)) {
             endDateGoal.setTextColor(Color.RED) // Set text color to red
         }
 
         arrowBackBtn.setOnClickListener {
             // pop the fragment from the back stack to return to the previous fragment
+
             requireActivity().supportFragmentManager.popBackStack()
         }
 
@@ -105,16 +115,21 @@ class GoalTransFragment : Fragment() {
                 requireActivity().supportFragmentManager.popBackStack()
             }
         }
+        editBtn.setOnClickListener {
+            val fragmentManager = requireActivity().supportFragmentManager
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            val editGoal = EditGoalFragment.newInstance(record)
+            val transaction = fragmentManager.beginTransaction()
+            transaction.replace(
+                R.id.main_container,
+                editGoal,
+                EditGoalFragment::class.java.simpleName
+            )
+            transaction.addToBackStack(null)
+            transaction.commit()
 
-//        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
-//
-//        // Set up the refresh listener
-//        swipeRefreshLayout.setOnRefreshListener {
-//            showGoals(view)
-//            // Signal that the refresh has finished
-//            swipeRefreshLayout.isRefreshing = false
-//        }
 
+        }
     }
 
     private fun showGoalTrans(view: View) {

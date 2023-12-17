@@ -11,8 +11,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clickable="true"
-    tools:context=".fragments.AddTransactionFragment"
-    android:id="@+id/addTransactionFragment"
+    tools:context=".fragments.AddGoalTransFragment"
+    android:id="@+id/addGoalTransFragment"
     android:background="@color/white">
 
     <RelativeLayout

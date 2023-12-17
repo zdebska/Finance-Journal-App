@@ -19,7 +19,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     // basis constants with names of tables and fields
     companion object {
         const val DATABASE_NAME = "FinanceJournalDatabase.db"
-        const val DATABASE_VERSION = 8
+        const val DATABASE_VERSION = 15
         const val TABLE_TRANSACTIONS = "transactions"
         const val TABLE_CATEGORIES = "categories"
         const val TABLE_GOALS = "goals"
@@ -72,7 +72,6 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         val createGoalsTransactionsTable = "CREATE TABLE IF NOT EXISTS $TABLE_GOALS_TRANSACTIONS" +
                 "( $KEY_ID INTEGER PRIMARY KEY," +
                 "$KEY_AMOUNT REAL NOT NULL," +
-                "$KEY_NOTE TEXT NOT NULL," +
                 "$KEY_DATE NUMERIC DEFAULT CURRENT_TIMESTAMP," +
                 "$KEY_GOAL INTEGER" +
                 ");"
@@ -359,7 +358,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
                 saved = goalTransactions.sumOf { it.amount.toDouble() }.toFloat()
 
                 // Check if the goal is reached
-                val isReached = if (saved >= amount) {
+                isReached = if (saved >= amount) {
                     1
                 } else {
                     0
@@ -391,14 +390,10 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
             cursor = db.rawQuery(selectQuery, null)
 
             if (cursor.moveToFirst()) {
-                val goalAmount = cursor.getFloat(cursor.getColumnIndex(KEY_AMOUNT))
 
                 // Calculate the saved amount for the goal based on transactions
                 val goalTransactions = viewGoalsTransactions(goalID)
                 savedAmount = goalTransactions.sumOf { it.amount.toDouble() }.toFloat()
-
-                // Ensure saved amount doesn't exceed the goal amount
-                savedAmount = minOf(savedAmount, goalAmount)
             }
         } catch (e: SQLException) {
             db.execSQL(selectQuery)

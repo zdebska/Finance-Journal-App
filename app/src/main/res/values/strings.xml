@@ -40,5 +40,6 @@
     <string name="deadline">Deadline</string>
     <string name="addSaving">Add saving</string>
     <string name="deleteGoal">Delete goal</string>
-    <string name="reached">Reached goal</string>
+    <string name="editGoal">Edit goal</string>
+    <string name="reached">Reached!</string>
 </resources>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.EditGoalFragment"
+    android:id="@+id/editGoalFragment"
+    android:background="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/titleEditGoal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16sp"
+            android:layout_marginTop="16sp"
+            android:layout_marginEnd="16sp"
+            android:layout_marginBottom="16sp"
+            android:background="@color/white"
+            android:drawablePadding="12sp"
+            android:text="@string/editGoal"
+            android:textColor="@color/black"
+            android:textSize="25sp" />
+
+        <ImageView
+            android:id="@+id/arrowBackBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/titleEditGoal"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="10sp"
+            app:srcCompat="@drawable/baseline_arrow_back_24"
+            android:clickable="true"
+            />
+
+        <TextView
+            android:id="@+id/nameID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titleEditGoal"
+            android:layout_alignStart="@id/arrowBackBtn"
+            android:layout_marginStart="30sp"
+            android:layout_marginTop="30dp"
+            android:text="@string/name"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@+id/NameLayout"
+            android:layout_width="304dp"
+            android:layout_height="37dp"
+            android:layout_below="@+id/nameID"
+            android:layout_alignStart="@id/nameID"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/addNameIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/add_trans_note_icon" />
+
+            <EditText
+                android:id="@+id/SelectNameBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="3dp"
+                android:layout_weight="2"
+                android:backgroundTint="@color/white"
+                android:hint="@string/name_background"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:maxLength="30"
+                android:textSize="15sp"
+                android:gravity="center_vertical"
+                android:clickable="true"/>
+
+            <ImageView
+                android:id="@+id/SelectNameImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/baseline_arrow_forward_ios_24"
+                android:clickable="true"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/dateID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/NameLayout"
+            android:layout_alignStart="@id/arrowBackBtn"
+            android:layout_marginStart="30sp"
+            android:layout_marginTop="37dp"
+            android:text="@string/deadline"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@+id/DateSelectionLayout"
+            android:layout_width="304dp"
+            android:layout_height="37dp"
+            android:layout_below="@+id/dateID"
+            android:layout_alignStart="@id/dateID"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/addTransDateIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/add_trans_date_icon"
+                />
+
+            <Button
+                android:id="@+id/SelectDateBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_weight="2"
+                android:backgroundTint="@color/white"
+                android:gravity="left"
+                android:textColor="@color/black"
+                android:textSize="15sp"/>
+
+            <ImageView
+                android:id="@+id/SelectDateImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/baseline_arrow_forward_ios_24"
+                android:clickable="true"/>
+
+        </LinearLayout>
+
+
+
+        <TextView
+            android:id="@+id/amountID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/DateSelectionLayout"
+            android:layout_alignStart="@id/arrowBackBtn"
+            android:layout_marginStart="30sp"
+            android:layout_marginTop="30dp"
+            android:text="@string/amount"
+            android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@+id/AmountSelectionLayout"
+            android:layout_width="304dp"
+            android:layout_height="37dp"
+            android:layout_below="@+id/amountID"
+            android:layout_alignStart="@id/amountID"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/addAmountIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/add_trans_amount_icon" />
+
+            <EditText
+                android:id="@+id/SelectAmountBtn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_marginStart="3dp"
+                android:backgroundTint="@color/white"
+                android:hint="@string/amount_zero"
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                tools:ignore="RtlHardcoded" />
+
+            <ImageView
+                android:id="@+id/SelectAmountImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/baseline_arrow_forward_ios_24"
+                android:clickable="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="61dp"
+            android:layout_height="62dp"
+            android:background="@drawable/circle_save_transaction_btn"
+            android:orientation="horizontal"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="600dp"
+            >
+            <Button
+                android:id="@+id/saveGoalBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00FFFFFF"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</FrameLayout>

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".fragments.GoalTransFragment"
     android:id="@+id/goal_trans_containter_fragment"
+    android:clickable="true"
     android:background="@color/white">
 
     <RelativeLayout
