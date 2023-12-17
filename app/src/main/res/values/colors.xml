@@ -11,4 +11,7 @@
     <color name="pink">#FF90BC</color>
     <color name="transparent">#6F6D6D</color>
     <color name="main_grey_color">#FFDEDEDE</color>
+    <color name="red">#FF0000</color>
+    <color name="dkgreen">#006400</color>
+    #006400
 </resources>

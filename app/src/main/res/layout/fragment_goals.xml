@@ -39,26 +39,33 @@
             android:textColor="@color/black"
             android:textSize="17sp"/>
 
-        <LinearLayout
-            android:id="@+id/GoalsContainer"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_below="@+id/addGoalButton"
+            android:id="@+id/swipeRefreshLayoutGoal"
             android:layout_width="380dp"
-            android:layout_height="500dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below = "@+id/addGoalButton"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical" >
+            android:layout_height="500dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewGoals"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+            <LinearLayout
+                android:id="@+id/GoalsContainer"
+                android:layout_width="380dp"
+                android:layout_height="500dp"
                 android:layout_centerHorizontal="true"
-                android:orientation="vertical" />
-        </LinearLayout>
+                android:layout_below = "@+id/addGoalButton"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical" >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewGoals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerHorizontal="true"
+                    android:orientation="vertical" />
+            </LinearLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>
 </FrameLayout>

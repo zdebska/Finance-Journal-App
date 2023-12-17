@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         // Assign icons to fragments
         tabs.getTabAt(0)?.setIcon(R.drawable.baseline_home_24)
         tabs.getTabAt(1)?.setIcon(R.drawable.baseline_currency_exchange_24)
-        tabs.getTabAt(2)?.setIcon(R.drawable.baseline_bar_chart_24)
+        tabs.getTabAt(2)?.setIcon(R.drawable.baseline_savings_24)
     }
 
     // Function that changes the selected tab in a TabLayout to the one specified by the index.

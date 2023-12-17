@@ -19,7 +19,7 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
     // basis constants with names of tables and fields
     companion object {
         const val DATABASE_NAME = "FinanceJournalDatabase.db"
-        const val DATABASE_VERSION = 4
+        const val DATABASE_VERSION = 8
         const val TABLE_TRANSACTIONS = "transactions"
         const val TABLE_CATEGORIES = "categories"
         const val TABLE_GOALS = "goals"
@@ -183,7 +183,6 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         //create container and fill it with passed data from a user
         val contentValues = ContentValues()
         contentValues.put(KEY_AMOUNT, transaction.amount)
-        contentValues.put(KEY_NOTE, transaction.note)
         contentValues.put(KEY_DATE, transaction.creationDate)
         contentValues.put(KEY_GOAL, transaction.goal)
 
@@ -282,6 +281,47 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         db.close()
         return transList
     }
+    @SuppressLint("Range")
+    fun viewGoalsTransactions(goalId: Int): ArrayList<GoalTransactionModel> {
+        // create an array whose elements are records from the table
+        val transList: ArrayList<GoalTransactionModel> = ArrayList()
+        val selectQuery = "SELECT * FROM $TABLE_GOALS_TRANSACTIONS WHERE $KEY_GOAL = $goalId"
+
+        val db = this.readableDatabase
+        var cursor: Cursor? = null
+
+        // create cursor to iterate through the data of the table
+        try {
+            cursor = db.rawQuery(selectQuery, null)
+        } catch (e: SQLException) {
+            db.execSQL(selectQuery)
+            db.close()
+            return ArrayList()
+        }
+
+        var id: Int
+        var amount: Float
+        var creationDate: String
+
+        if (cursor.moveToFirst()) {
+            do {
+                id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
+                amount = cursor.getFloat(cursor.getColumnIndex(KEY_AMOUNT))
+                creationDate = cursor.getString(cursor.getColumnIndex(KEY_DATE))
+
+                val transaction = GoalTransactionModel(
+                    id = id,
+                    amount = amount,
+                    creationDate = creationDate,
+                    goal = goalId
+                )
+                transList.add(transaction)
+            } while (cursor.moveToNext())
+            cursor.close()
+        }
+        db.close()
+        return transList
+    }
 
     @SuppressLint("Range")
     fun viewGoals(): ArrayList<GoalModel> {
@@ -305,6 +345,8 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         var name: String
         var amount: Float
         var endDate: String
+        var saved: Float
+        var isReached: Int
 
         if (cursor.moveToFirst()) {
             do {
@@ -312,12 +354,24 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
                 name = cursor.getString(cursor.getColumnIndex(KEY_NAME))
                 amount = cursor.getFloat(cursor.getColumnIndex(KEY_AMOUNT))
                 endDate = cursor.getString(cursor.getColumnIndex(KEY_END_DATE))
+                // Calculate the saved amount for the goal based on transactions
+                val goalTransactions = viewGoalsTransactions(id)
+                saved = goalTransactions.sumOf { it.amount.toDouble() }.toFloat()
+
+                // Check if the goal is reached
+                val isReached = if (saved >= amount) {
+                    1
+                } else {
+                    0
+                }
 
                 val goal = GoalModel(
                     id = id,
                     name = name,
                     amount = amount,
-                    endDate = endDate
+                    endDate = endDate,
+                    saved = saved,
+                    isReached = isReached
                 )
                 goalList.add(goal)
             } while (cursor.moveToNext())
@@ -327,59 +381,80 @@ class AppDB(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, D
         return goalList
     }
 
-    @SuppressLint("Range")
-    fun viewGoalsTransactions(condition: String): ArrayList<GoalTransactionModel> {
-        // create an array whose elements are records from the table
-        val transList: ArrayList<GoalTransactionModel> = ArrayList()
-        val selectQuery: String
-
-        // set query depending on a presence of condition
-        if (condition.isNotEmpty()) {
-            selectQuery = "SELECT * FROM $TABLE_GOALS_TRANSACTIONS $condition"
-        } else {
-            selectQuery = "SELECT * FROM $TABLE_GOALS_TRANSACTIONS"
-        }
-
+    fun calculateSavedAmountForGoal(goalID: Int): Float {
         val db = this.readableDatabase
+        val selectQuery = "SELECT $KEY_AMOUNT FROM $TABLE_GOALS WHERE $KEY_ID = $goalID"
         var cursor: Cursor? = null
+        var savedAmount: Float = 0f
 
-        // create cursor in order to iterate through the data of the table
         try {
             cursor = db.rawQuery(selectQuery, null)
+
+            if (cursor.moveToFirst()) {
+                val goalAmount = cursor.getFloat(cursor.getColumnIndex(KEY_AMOUNT))
+
+                // Calculate the saved amount for the goal based on transactions
+                val goalTransactions = viewGoalsTransactions(goalID)
+                savedAmount = goalTransactions.sumOf { it.amount.toDouble() }.toFloat()
+
+                // Ensure saved amount doesn't exceed the goal amount
+                savedAmount = minOf(savedAmount, goalAmount)
+            }
         } catch (e: SQLException) {
             db.execSQL(selectQuery)
+        } finally {
+            cursor?.close()
             db.close()
-            return ArrayList()
         }
-        var id: Int
-        var amount: Float
-        var note: String
-        var creationDate: String
-        var goal: Int
 
-        if (cursor.moveToFirst()) {
-            do {
-                id = cursor.getInt(cursor.getColumnIndex(KEY_ID))
-                amount = cursor.getFloat(cursor.getColumnIndex(KEY_AMOUNT))
-                note = cursor.getString(cursor.getColumnIndex(KEY_NOTE))
-                creationDate = cursor.getString(cursor.getColumnIndex(KEY_DATE))
-                goal = cursor.getInt(cursor.getColumnIndex(KEY_GOAL))
-
-                val transaction = GoalTransactionModel(
-                    id = id,
-                    amount = amount,
-                    note = note,
-                    creationDate = creationDate,
-                    goal = goal
-                )
-                transList.add(transaction)
-            } while (cursor.moveToNext())
-            cursor.close()
-        }
-        db.close()
-        return transList
+        return savedAmount
     }
+    fun updateGoal(goal: GoalModel): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
 
+        contentValues.put(KEY_NAME, goal.name)
+        contentValues.put(KEY_AMOUNT, goal.amount)
+        contentValues.put(KEY_END_DATE, goal.endDate)
+
+        val success = db.update(
+            TABLE_GOALS, contentValues,
+            "$KEY_ID=${goal.id}", null
+        )
+        db.close()
+        return success
+    }
+    fun deleteGoal(goalID: Int): Int {
+        val db = this.writableDatabase
+        var success = 0
+
+        db.beginTransaction()
+        try {
+            // Delete transactions related to the goal
+            db.delete(TABLE_GOALS_TRANSACTIONS, "$KEY_GOAL=?", arrayOf(goalID.toString()))
+
+            // Now, delete the goal itself
+            success = db.delete(TABLE_GOALS, "$KEY_ID=?", arrayOf(goalID.toString()))
+
+            // Commit the transaction
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            // Handle exceptions if needed
+            e.printStackTrace()
+        } finally {
+            // End the transaction
+            db.endTransaction()
+            db.close()
+        }
+
+        return success
+    }
+    fun deleteGoalTrans(transId: Int): Int {
+        val db = this.writableDatabase
+        val success = db.delete(TABLE_GOALS_TRANSACTIONS, "$KEY_ID=$transId", null)
+        db.close()
+        return success
+    }
 
     // add category to the "categories" table
     // @author Assatulla Dias (xassat00)

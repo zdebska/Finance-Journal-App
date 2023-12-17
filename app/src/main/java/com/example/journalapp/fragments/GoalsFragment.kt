@@ -9,14 +9,17 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.journalapp.MainActivity
 import com.example.journalapp.R
 import com.example.journalapp.fragments.adapters.GoalsAdapter
+import com.example.journalapp.fragments.adapters.RecordAdapter
 import com.example.journalapp.models.AppDB
 
 
 class GoalsFragment : Fragment() {
 
+    private lateinit var view: View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -24,9 +27,9 @@ class GoalsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        val view = inflater.inflate(R.layout.fragment_goals, container, false)
+        view = inflater.inflate(R.layout.fragment_goals, container, false)
 
         val addGoalButton = view.findViewById<Button>(R.id.addGoalButton)
 
@@ -38,8 +41,21 @@ class GoalsFragment : Fragment() {
             fragmentTransaction.add(R.id.main_container, addGoalFragment)
             fragmentTransaction.addToBackStack(null)
             fragmentTransaction.commit()
+            showGoals(view)
+        }
+        showGoals(view)
+        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutGoal)
+
+        // Set up the refresh listener
+        swipeRefreshLayout.setOnRefreshListener {
+            showGoals(view)
+            // Signal that the refresh has finished
+            swipeRefreshLayout.isRefreshing = false
         }
 
+        return view
+    }
+    private fun showGoals(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewGoals)
         val layoutManager = LinearLayoutManager(requireContext())
         recyclerView.layoutManager = layoutManager
@@ -48,7 +64,10 @@ class GoalsFragment : Fragment() {
         val adapter = GoalsAdapter(records)
         recyclerView.adapter = adapter
 
-        return view
+    }
+    override fun onResume() {
+        super.onResume()
+        showGoals(view)
     }
 
 }

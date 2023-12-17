@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -116,6 +117,9 @@ class AddGoalFragment  : Fragment() {
     }
 
     private fun setTextVal(Btn: EditText, Img: ImageView) {
+        if (Btn.id == R.id.SelectAmountBtn) {
+            Btn.inputType = InputType.TYPE_CLASS_NUMBER
+        }
         for (i in listOf(Btn, Img)) {
             i.setOnClickListener() {
                 // open keyboard
@@ -151,24 +155,32 @@ class AddGoalFragment  : Fragment() {
         val recName = nameBtn.text.toString()
 
         val dbHandler: AppDB = AppDB(requireContext())
+        val existingGoals = dbHandler.viewGoals()
+        if(existingGoals.none { it.name == recName }){
+            if (recAmount.isNotEmpty() and recName.isNotEmpty()) { // && catName != "None"
+                val newRecord = GoalModel(
+                    0, recName, recAmount.toFloat(), recDate, 0.0f, 0
+                )
+                val status = dbHandler.addGoal(newRecord)
 
-
-        if (recAmount.isNotEmpty() and recName.isNotEmpty()) { // && catName != "None"
-            val newRecord = GoalModel(
-                0, recName, recAmount.toFloat(), recDate
-            )
-            val status = dbHandler.addGoal(newRecord)
-
-            if (status > -1) {
-                Toast.makeText(requireContext(), "Record saved", Toast.LENGTH_LONG).show()
-                amountBtn.text.clear()
-                nameBtn.text.clear()
-                return 1
+                if (status > -1) {
+                    Toast.makeText(requireContext(), "Record saved", Toast.LENGTH_LONG).show()
+                    amountBtn.text.clear()
+                    nameBtn.text.clear()
+                    return 1
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "All fields must be field in",
+                    Toast.LENGTH_LONG
+                ).show()
+                return 0
             }
         } else {
             Toast.makeText(
                 requireContext(),
-                "All fields must be field in",
+                "This name already exist",
                 Toast.LENGTH_LONG
             ).show()
             return 0

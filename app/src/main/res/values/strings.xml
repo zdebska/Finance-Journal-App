@@ -39,4 +39,6 @@
     <string name="name_background">Write a name</string>
     <string name="deadline">Deadline</string>
     <string name="addSaving">Add saving</string>
+    <string name="deleteGoal">Delete goal</string>
+    <string name="reached">Reached goal</string>
 </resources>

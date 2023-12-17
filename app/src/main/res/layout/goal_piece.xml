@@ -113,21 +113,21 @@
             android:layout_height="wrap_content"
             android:indeterminate="false"
             android:max="100"
-            android:progress="33"/>
+            android:progress="0"/>
 
         <TextView
             android:id="@+id/goalPercentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="33%"
+            android:text="0%"
             android:textColor="@color/black"
             android:textSize="14sp" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textAddGoalTransaction"
+    <Button
+        android:id="@+id/buttonAddGoalTransaction"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:background="@drawable/rectangle_round_color"
@@ -138,9 +138,7 @@
         android:layout_marginTop="38sp"
         android:textColor="#e0e0e0"
         android:textSize="16sp"
-        android:textStyle="bold"
         android:gravity="center"
         android:clickable="true"
         />
-
 </LinearLayout>
