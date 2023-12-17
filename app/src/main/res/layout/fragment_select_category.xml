@@ -23,6 +23,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"/>
 
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_below="@+id/selectCatTextView"
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="380dp"
+            android:layout_height="220dp">
         <LinearLayout
             android:id="@+id/CategoryContainer"
             android:layout_width="match_parent"
@@ -42,6 +48,7 @@
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal" />
         </LinearLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <TextView
             android:id="@+id/addCatTextView"

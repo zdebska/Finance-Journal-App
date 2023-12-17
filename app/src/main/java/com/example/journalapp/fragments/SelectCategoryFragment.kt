@@ -20,6 +20,7 @@ import com.example.journalapp.fragments.adapters.CategoryAdapter
 import com.example.journalapp.fragments.adapters.RecordAdapter
 import com.example.journalapp.models.AppDB
 import com.example.journalapp.models.CategoryModel
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 class SelectCategoryFragment : Fragment() {
     private val sharedViewModel: SharedViewModel by lazy {
@@ -83,6 +84,15 @@ class SelectCategoryFragment : Fragment() {
         closeButton.setOnClickListener {
             // Pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
+        }
+
+        val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+
+        // Set up the refresh listener
+        swipeRefreshLayout.setOnRefreshListener {
+            showCategories(view)
+            // Signal that the refresh has finished
+            swipeRefreshLayout.isRefreshing = false
         }
 
         showCategories(view)
