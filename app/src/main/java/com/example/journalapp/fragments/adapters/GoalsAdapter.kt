@@ -1,3 +1,8 @@
+/*
+ * @author Zdebska Kateryna (xzdebs00)
+ * @brief Adapter class to bind data of a record from the "goals" table to the view of the main page.
+ */
+
 package com.example.journalapp.fragments.adapters
 
 import SharedViewModel
@@ -21,54 +26,75 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+/**
+ * Adapter class to bind data of a record from the "goals" table to the view of the main page.
+ *
+ * @param goals The list of goals to be displayed.
+ * @param sharedViewModel An instance of SharedViewModel for communication between fragments.
+ */
 class GoalsAdapter(private val goals: List<GoalModel>, private val sharedViewModel: SharedViewModel) : RecyclerView.Adapter<GoalsAdapter.GoalViewHolder>() {
 
     private lateinit var context: Context
+
+    /**
+     * Creates a new GoalViewHolder instance when needed.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GoalViewHolder {
         context = parent.context
         val view = LayoutInflater.from(parent.context).inflate(R.layout.goal_piece, parent, false)
         return GoalViewHolder(view)
     }
 
+    /**
+     * Binds the data of a goal to the UI elements of the view.
+     */
     override fun onBindViewHolder(holder: GoalViewHolder, position: Int) {
+        // Retrieve goal data
         val goal = goals[position]
 
+        // Set goal data to respective UI elements
         holder.goalNameText.text = goal.name
         holder.goalAmountText.text = goal.amount.toString() + " $"
         holder.goalEndDateText.text = goal.endDate
-        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()) // Adjust the pattern accordingly
+
+        // Parse end date and compare with the current date
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
         val endDate = dateFormat.parse(goal.endDate)
 
-        // Check if today's date is before the deadline
         val calendar = Calendar.getInstance()
-        // Set the time components of currentDate to midnight
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         val currentDateWithoutTime = Date(calendar.timeInMillis)
+
+        // Change text color to red if the deadline has passed
         if ((goal.isReached == 0) and (currentDateWithoutTime > endDate)){
-            holder.goalEndDateText.setTextColor(Color.RED) // Set text color to red
+            holder.goalEndDateText.setTextColor(Color.RED)
         }
+
+        // Calculate and display saved amount
         val dbHandler: AppDB = AppDB(context)
         val saved = dbHandler.calculateSavedAmountForGoal(goal.id)
         holder.goalSavedText.text = saved.toString() + " $"
+
+        // Adjust UI elements based on saved percentage
         if ((100 * saved / goal.amount).toInt() >= 100) {
             holder.buttonAddGoalTransaction.visibility = View.GONE
             holder.buttonAddGoalTransaction.isClickable = false
             holder.textAddGoalTransaction.visibility = View.VISIBLE
         }
+
+        // Set progress bar and percentage text
         if ((100 * saved / goal.amount).toInt() > 100){
             holder.progressBar.progress = 100
             holder.goalPercentText.text = ">100%"
-
-        }
-        else{
+        } else {
             holder.progressBar.progress = (100 * saved / goal.amount).toInt()
-            holder.goalPercentText.text = (100 * saved / goal.amount).toInt().toString()+ "%"
+            holder.goalPercentText.text = (100 * saved / goal.amount).toInt().toString() + "%"
         }
 
-
+        // Handle item click to navigate to GoalTransFragment
         holder.itemView.setOnClickListener {
             sharedViewModel.selectGoal(goal)
             val fragment = GoalTransFragment.newInstance(goal)
@@ -78,6 +104,8 @@ class GoalsAdapter(private val goals: List<GoalModel>, private val sharedViewMod
             transaction.addToBackStack(null)
             transaction.commit()
         }
+
+        // Handle button click to navigate to AddGoalTransFragment
         holder.buttonAddGoalTransaction.setOnClickListener {
             sharedViewModel.selectGoal(goal)
             val fragment = AddGoalTransFragment.newInstance(goal)
@@ -89,10 +117,16 @@ class GoalsAdapter(private val goals: List<GoalModel>, private val sharedViewMod
         }
     }
 
+    /**
+     * Returns the total number of goals in the adapter.
+     */
     override fun getItemCount(): Int {
         return goals.size
     }
 
+    /**
+     * ViewHolder class to hold and manage the UI elements for each goal item.
+     */
     inner class GoalViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val goalNameText: TextView = itemView.findViewById(R.id.goalNameText)
         val goalAmountText: TextView = itemView.findViewById(R.id.goalAmountText)
@@ -103,7 +137,4 @@ class GoalsAdapter(private val goals: List<GoalModel>, private val sharedViewMod
         val buttonAddGoalTransaction: Button = itemView.findViewById(R.id.buttonAddGoalTransaction)
         val textAddGoalTransaction: TextView = itemView.findViewById(R.id.textAddGoalTransaction)
     }
-
-
-
 }

@@ -1,10 +1,13 @@
+/*
+ * @author Zdebska Kateryna (xzdebs00)
+ * @brief A fragment that displays and manages the "goal" page.
+ */
+
 package com.example.journalapp.fragments
 
 import SharedViewModel
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,18 +20,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.journalapp.R
-import com.example.journalapp.fragments.adapters.GoalsAdapter
-import com.example.journalapp.fragments.adapters.RecordAdapter
 import com.example.journalapp.fragments.adapters.TransGoalAdapter
 import com.example.journalapp.models.AppDB
 import com.example.journalapp.models.GoalModel
-import com.example.journalapp.models.TransactionModel
 import com.google.android.material.textview.MaterialTextView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+/**
+ * A fragment that displays and manages the "goal" page.
+ */
 class GoalTransFragment : Fragment() {
     private val sharedViewModel: SharedViewModel by lazy {
         SharedViewModel.getInstance(requireActivity().application)
@@ -38,6 +41,9 @@ class GoalTransFragment : Fragment() {
     companion object {
         private const val ARG_DATA = "data"
 
+        /**
+         * Creates a new instance of GoalTransFragment with the given GoalModel data.
+         */
         fun newInstance(data: GoalModel): GoalTransFragment {
             val fragment = GoalTransFragment()
             val args = Bundle()
@@ -47,10 +53,10 @@ class GoalTransFragment : Fragment() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,9 +64,9 @@ class GoalTransFragment : Fragment() {
         view = inflater.inflate(R.layout.fragment_goal_trans, container, false)
         val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayoutGoal)
         val record: GoalModel? = arguments?.getParcelable(GoalTransFragment.ARG_DATA)
-        swipeRefreshLayout.setOnRefreshListener {
 
-//            showGoal(record)
+        // Set up the refresh listener
+        swipeRefreshLayout.setOnRefreshListener {
             showGoalTrans(view)
             // Signal that the refresh has finished
             swipeRefreshLayout.isRefreshing = false
@@ -71,6 +77,8 @@ class GoalTransFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val record: GoalModel? = arguments?.getParcelable(GoalTransFragment.ARG_DATA)
+
+        // Show the goal details and transactions
         showGoal(record)
         sharedViewModel.selectedGoal.observe(viewLifecycleOwner) { goal ->
             showGoal(goal)
@@ -78,7 +86,9 @@ class GoalTransFragment : Fragment() {
         }
     }
 
-
+    /**
+     * Displays the details of the selected goal.
+     */
     private fun showGoal(record: GoalModel?) {
 
         val dbHandler: AppDB = AppDB(requireContext())
@@ -100,12 +110,13 @@ class GoalTransFragment : Fragment() {
 
         val saved = dbHandler.calculateSavedAmountForGoal(record!!.id)
         savedAmountGoal.text = saved.toString() + " $"
+
+        // Adjust UI elements based on saved percentage
         if ((100 * saved / record.amount).toInt() >= 100) {
             addTrans.visibility = View.GONE
             addTrans.isClickable = false
             addTransText.visibility = View.VISIBLE
-        }
-        else {
+        } else {
             addTrans.visibility = View.VISIBLE
             addTrans.isClickable = true
             addTransText.visibility = View.GONE
@@ -128,18 +139,20 @@ class GoalTransFragment : Fragment() {
         }
 
         arrowBackBtn.setOnClickListener {
-            // pop the fragment from the back stack to return to the previous fragment
-
+            // Pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
 
         deleteBtn.setOnClickListener {
+            // Delete the goal and pop the fragment from the back stack
             val status = dbHandler.deleteGoal(record!!.id)
             if (status == 1) {
                 requireActivity().supportFragmentManager.popBackStack()
             }
         }
+
         editBtn.setOnClickListener {
+            // Open the EditGoalFragment for editing the goal
             val fragmentManager = requireActivity().supportFragmentManager
             val fragmentTransaction = fragmentManager.beginTransaction()
             val editGoal = EditGoalFragment.newInstance(record)
@@ -152,7 +165,9 @@ class GoalTransFragment : Fragment() {
             transaction.addToBackStack(null)
             transaction.commit()
         }
+
         addTrans.setOnClickListener {
+            // Open the AddGoalTransFragment to add a new goal transaction
             sharedViewModel.selectGoal(record)
             val fragment = AddGoalTransFragment.newInstance(record)
             val fragmentManager = (requireActivity() as AppCompatActivity).supportFragmentManager
@@ -167,6 +182,9 @@ class GoalTransFragment : Fragment() {
         }
     }
 
+    /**
+     * Displays the list of transactions for the selected goal.
+     */
     private fun showGoalTrans(view: View) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewGoalTrans)
         val layoutManager = LinearLayoutManager(requireContext())

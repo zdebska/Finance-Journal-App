@@ -1,10 +1,13 @@
+/*
+ * @author Zdebska Kateryna (xzdebs00)
+ * @brief A fragment that shows and sets the "add goal" page
+ */
+
 package com.example.journalapp.fragments
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -16,7 +19,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.journalapp.R
 import com.example.journalapp.models.AppDB
@@ -26,7 +28,11 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class AddGoalFragment  : Fragment() {
+/**
+ * A fragment that displays and manages the "add goal" page.
+ */
+class AddGoalFragment : Fragment() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -54,16 +60,16 @@ class AddGoalFragment  : Fragment() {
         val calendar = Calendar.getInstance()
         setTomorrowDate(dateBtn, calendar)
 
-        // set listener to the date button to open calendar onclick
+        // Set listener to the date button to open calendar onclick
         dateSelector(dateBtn, calendar, dateImg)
 
-        //set entered amount of money by a user to the "Amount" field
+        // Set entered amount of money by a user to the "Amount" field
         setTextVal(amountBtn, amountImg)
 
-        //set entered note by a user to the "Note" field
+        // Set entered note by a user to the "Note" field
         setTextVal(nameBtn, nameImg)
 
-        // save transaction to DB
+        // Save transaction to DB
         saveBtn.setOnClickListener() {
             val status = addGoal(dateBtn, amountBtn, nameBtn)
             if (status == 1) {
@@ -71,14 +77,17 @@ class AddGoalFragment  : Fragment() {
             }
         }
 
+        // Handle the back button click
         arrowBackBtn.setOnClickListener {
-            // pop the fragment from the back stack to return to the previous fragment
+            // Pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
         return view
     }
 
-    // set tomorrow as a default date when creating a new transaction record
+    /**
+     * Set tomorrow as a default date when creating a new transaction record.
+     */
     private fun setTomorrowDate(dateBtn: Button, calendar: Calendar) {
         // Add 1 day to the current date
         calendar.add(Calendar.DAY_OF_MONTH, 1)
@@ -94,7 +103,9 @@ class AddGoalFragment  : Fragment() {
         dateBtn.text = formattedTomorrowDate
     }
 
-    // set date selector to be shown on date button click
+    /**
+     * Set date selector to be shown on date button click.
+     */
     private fun dateSelector(dateBtn: Button, calendar: Calendar, dateImg: ImageView) {
         for (i in listOf<View>(dateBtn, dateImg)) {
             i.setOnClickListener() {
@@ -116,13 +127,16 @@ class AddGoalFragment  : Fragment() {
         }
     }
 
+    /**
+     * Set up the input field and image view for user input.
+     */
     private fun setTextVal(Btn: EditText, Img: ImageView) {
         if (Btn.id == R.id.SelectAmountBtn) {
             Btn.inputType = InputType.TYPE_CLASS_NUMBER
         }
         for (i in listOf(Btn, Img)) {
             i.setOnClickListener() {
-                // open keyboard
+                // Open keyboard
                 val inputMethodManager =
                     Btn.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.showSoftInput(Btn, InputMethodManager.SHOW_IMPLICIT)
@@ -145,8 +159,12 @@ class AddGoalFragment  : Fragment() {
         }
     }
 
+    /**
+     * Add a new goal to the database.
+     */
     @SuppressLint("SetTextI18n")
-    private fun addGoal( dateBtn: Button, amountBtn: EditText,
+    private fun addGoal(
+        dateBtn: Button, amountBtn: EditText,
         nameBtn: EditText
     ): Int {
 
@@ -164,23 +182,26 @@ class AddGoalFragment  : Fragment() {
                 val status = dbHandler.addGoal(newRecord)
 
                 if (status > -1) {
+                    // Show a success message and clear the input fields
                     Toast.makeText(requireContext(), "Record saved", Toast.LENGTH_LONG).show()
                     amountBtn.text.clear()
                     nameBtn.text.clear()
                     return 1
                 }
             } else {
+                // Show an error message if any field is blank
                 Toast.makeText(
                     requireContext(),
-                    "All fields must be field in",
+                    "All fields must be filled in",
                     Toast.LENGTH_LONG
                 ).show()
                 return 0
             }
         } else {
+            // Show an error message if the name already exists
             Toast.makeText(
                 requireContext(),
-                "This name already exist",
+                "This name already exists",
                 Toast.LENGTH_LONG
             ).show()
             return 0

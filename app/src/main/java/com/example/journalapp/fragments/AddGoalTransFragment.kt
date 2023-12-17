@@ -1,11 +1,13 @@
+/*
+ * @author Zdebska Kateryna (xzdebs00)
+ * @brief A fragment that shows and sets the "add goal transaction" page
+ */
+
 package com.example.journalapp.fragments
 
 import SharedViewModel
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.content.Context
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -17,20 +19,20 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.journalapp.R
 import com.example.journalapp.models.AppDB
-import com.example.journalapp.models.CategoryModel
 import com.example.journalapp.models.GoalModel
 import com.example.journalapp.models.GoalTransactionModel
-import com.example.journalapp.models.TransactionModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class AddGoalTransFragment : Fragment(){
+/**
+ * A fragment that displays and manages the "add goal transaction" page.
+ */
+class AddGoalTransFragment : Fragment() {
     private var goalID: Int = -1 // Initialize with a default value
     private val sharedViewModel: SharedViewModel by lazy {
         SharedViewModel.getInstance(requireActivity().application)
@@ -40,6 +42,9 @@ class AddGoalTransFragment : Fragment(){
     companion object {
         private const val ARG_DATA = "data"
 
+        /**
+         * Create a new instance of AddGoalTransFragment with the specified data.
+         */
         fun newInstance(data: GoalModel): AddGoalTransFragment {
             val fragment = AddGoalTransFragment()
             val args = Bundle()
@@ -48,6 +53,7 @@ class AddGoalTransFragment : Fragment(){
             return fragment
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -67,15 +73,14 @@ class AddGoalTransFragment : Fragment(){
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE)
         val formattedDate = dateFormat.format(currentDate)
 
-        //set entered amount of money by a user to the "Amount" field
+        // Set up the input fields and buttons
         setTextVal(amountBtn, amountImg)
         sharedViewModel.selectedGoal.observe(viewLifecycleOwner) { goal ->
             // Update goalID when the selected goal changes
             goalID = goal?.id ?: -1
         }
 
-        //set white color to the background of the Expense button
-        // save transaction to DB
+        // Save transaction to DB on button click
         saveBtn.setOnClickListener() {
             val status = addRecord(view, formattedDate, amountBtn, goalID)
             if (status == 1) {
@@ -83,21 +88,24 @@ class AddGoalTransFragment : Fragment(){
             }
         }
 
-
+        // Handle the back button click
         arrowBackBtn.setOnClickListener {
-            // pop the fragment from the back stack to return to the previous fragment
+            // Pop the fragment from the back stack to return to the previous fragment
             requireActivity().supportFragmentManager.popBackStack()
         }
         return view
     }
 
+    /**
+     * Set up the input field and image view for user input.
+     */
     private fun setTextVal(Btn: EditText, Img: ImageView) {
         if (Btn.id == R.id.SelectAmountBtn) {
             Btn.inputType = InputType.TYPE_CLASS_NUMBER
         }
         for (i in listOf(Btn, Img)) {
             i.setOnClickListener() {
-                // open keyboard
+                // Open the keyboard
                 val inputMethodManager =
                     Btn.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.showSoftInput(Btn, InputMethodManager.SHOW_IMPLICIT)
@@ -121,6 +129,9 @@ class AddGoalTransFragment : Fragment(){
         }
     }
 
+    /**
+     * Add a new transaction record to the database.
+     */
     @SuppressLint("SetTextI18n")
     private fun addRecord(
         view: View, date: String, amountBtn: EditText, goalId: Int
@@ -138,16 +149,13 @@ class AddGoalTransFragment : Fragment(){
             val status = dbHandler.addGoalTransaction(newRecord)
 
             if (status > -1) {
+                // Show a success message and clear the input field
                 Toast.makeText(requireContext(), "Record saved", Toast.LENGTH_LONG).show()
                 amountBtn.text.clear()
                 return 1
             }
-            else {
-                Toast.makeText(requireContext(), goalId.toString(), Toast.LENGTH_LONG).show()
-                amountBtn.text.clear()
-                return 1
-            }
         } else {
+            // Show an error message if the amount is blank
             Toast.makeText(
                 requireContext(),
                 "Amount cannot be blank",

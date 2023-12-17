@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+* @author Zdebska Kateryna (xzdebs00)
+* @brief Represents pattern of the goal view for each goal
+ -->
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="340dp"

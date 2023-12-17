@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+* @author Zdebska Kateryna (xzdebs00)
+* @brief Represents pattern of the goal transaction view for each goal transaction
+ -->
 <LinearLayout
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"

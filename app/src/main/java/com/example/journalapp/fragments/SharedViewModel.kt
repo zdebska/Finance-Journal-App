@@ -1,6 +1,7 @@
 /*
 * @author Kambulat Alakaev (xalaka00)
-* @brief Class for transferring categories through fragments
+* @author Zdebska Kateryna (xzdebs00)
+* @brief Class for transferring categories and goals through fragments
 * */
 
 import android.app.Application
@@ -23,6 +24,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
             }
     }
 
+    // @author Zdebska Kateryna (xzdebs00)
     fun selectGoal(goal: GoalModel?) {
         if(goal == null){
             selectedGoal.value == null
