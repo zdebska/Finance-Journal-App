@@ -15,7 +15,7 @@ You can read the application development process and technical documentation in 
 ## My part
 I have been responsible for setting and monitoring the financial goals.
 
-According to SCRUM principle User can add, edit and delete goals. To each goal User can add, edit and delete saving. 
+According to CRUD principle User can add, edit and delete goals. To each goal User can add, edit and delete saving. 
 
 Each goal has a cash limit and a deadline. When one of them is reached, the ability to add saves is removed and the User is notified.
 The User also has access to a percentage scale for each goal, for better interaction with the numbers.
